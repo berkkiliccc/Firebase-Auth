@@ -21,6 +21,6 @@ Bu projede firebase kullanarak auth işlemi yapıldı.
 
 - Daha fazla entegrasyon ekleme
 
-##
+## Hosting
 
-- fir-auth-project-berk.web.app hosting
+fir-auth-project-berk.web.app
