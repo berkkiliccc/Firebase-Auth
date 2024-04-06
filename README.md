@@ -11,6 +11,7 @@ Bu projede firebase kullanarak auth işlemi yapıldı.
 ## Eklentiler
 
 - Firebase auth
+- Firebase Hosting
 - Bootstrap
 - React router dom
 
@@ -19,3 +20,7 @@ Bu projede firebase kullanarak auth işlemi yapıldı.
 - Ek tarayıcı desteği
 
 - Daha fazla entegrasyon ekleme
+
+##
+
+- fir-auth-project-berk.web.app hosting
