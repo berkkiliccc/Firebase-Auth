@@ -1,4 +1,4 @@
-#Firebase Auth
+## Firebase Auth
 
 Bu projede firebase kullanarak auth işlemi yapıldı.
 
