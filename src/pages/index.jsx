@@ -1,17 +1,21 @@
-function Home({ currentUser, setIsLoading }) {
+import { auth } from "../config/firebase";
+
+function Home() {
+  const currentUser = auth.currentUser;
+
   return (
     <>
       <div className="container">
         <div className="row">
           <div className="col-md-12 text-center ">
             <h1 className="text-center "></h1>
-            {currentUser !== null && setIsLoading === false && (
+            {currentUser && (
               <h1>
                 Hoşgeldin <br />
                 <span className="text-primary ">{currentUser.displayName}</span>
               </h1>
             )}
-            {currentUser !== null && setIsLoading === false && (
+            {currentUser && (
               <img
                 className="mt-4 mb-5 rounded-circle  border border-1 "
                 style={{ width: "200px" }}

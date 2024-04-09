@@ -16,13 +16,17 @@ function SignupPage() {
 
   const handleSignup = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log("Signup Success");
-      updateProfile(auth.currentUser, {
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+
+      console.log("Signup Success", user);
+
+      await updateProfile(user.user, {
         displayName: `${firstName} ${lastName}`,
         photoURL: defaultPhotoURL,
       });
-      navigate("/");
+
+      //
+      navigate("/login");
     } catch (e) {
       console.error(e);
     }

@@ -18,11 +18,7 @@ function App() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, handleAuthChanged);
-
-    return unsubscribe ? () => unsubscribe() : null;
-  }, []);
+  onAuthStateChanged(auth, handleAuthChanged);
 
   if (isLoading) {
     return (
@@ -35,12 +31,9 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar currentUser={currentUser} />
+      <Navbar />
       <Routes>
-        <Route
-          path="/"
-          element={<Home currentUser={currentUser} setIsLoading={isLoading} />}
-        />
+        <Route path="/" element={<Home />} />
         <Route
           path="/login"
           element={currentUser === null ? <LoginPage /> : <Navigate to="/" />}

@@ -1,20 +1,10 @@
 import { signOut } from "firebase/auth";
-import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../config/firebase";
 
-function Navbar({ currentUser }) {
-  const [isLogin, setIsLogin] = useState("Login");
-
+function Navbar() {
+  const currentUser = auth.currentUser;
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (currentUser !== null) {
-      setIsLogin("Logout");
-    } else {
-      setIsLogin("Login");
-    }
-  }, [currentUser]);
 
   const handleLogout = () => {
     signOut(auth);
@@ -34,7 +24,7 @@ function Navbar({ currentUser }) {
 
           <Link to="/login">
             <button onClick={handleLogout} className="btn btn-outline-success">
-              {isLogin}
+              {currentUser ? "Logout" : "Login"}
             </button>
           </Link>
         </div>

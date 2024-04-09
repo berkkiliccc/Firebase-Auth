@@ -2,6 +2,7 @@
 # Firebase config file
 src/config/firebase.jsx
 
+
 ### Firebase ###
 .idea
 **/node_modules/*
@@ -32,6 +33,7 @@ src/config/firebase.jsx
 logs
 **/*.backup.*
 **/*.back.*
+/dist
 
 node_modules
 bower_components
