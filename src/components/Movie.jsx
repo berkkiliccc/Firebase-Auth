@@ -1,11 +1,13 @@
-import { collection, doc, getDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db, auth } from "../config/firebase";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function Movie() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getMovie();
@@ -23,6 +25,16 @@ function Movie() {
       }
     } catch (error) {
       console.log("Error getting document:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteDoc(doc(moviesCollectionRef, movieId));
+      console.log("Document successfully deleted!");
+      navigate("/");
+    } catch (error) {
+      console.error("Error removing document: ", error);
     }
   };
 
@@ -75,7 +87,10 @@ function Movie() {
                   Düzenle
                 </button>
                 <div>
-                  <button className="button is-danger  is-fullwidth">
+                  <button
+                    onClick={handleDelete}
+                    className="button is-danger  is-fullwidth"
+                  >
                     Sil
                   </button>
                 </div>
