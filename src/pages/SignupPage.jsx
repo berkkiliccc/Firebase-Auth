@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, googleProvider } from "../config/firebase";
+import { auth } from "../config/firebase";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 

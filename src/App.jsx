@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -8,6 +8,8 @@ import LoginPage from "./pages/LoginPage";
 import Navbar from "./components/Navbar";
 import { auth } from "./config/firebase";
 import SignupPage from "./pages/SignupPage";
+import CreateMovie from "./components/CreateMovie";
+import Movie from "./components/Movie";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -44,6 +46,8 @@ function App() {
             currentUser === null ? <SignupPage /> : <Navigate to="/login" />
           }
         />
+        <Route path="/addmovie" element={<CreateMovie />} />
+        <Route path={`/movie/:movieId`} element={<Movie />} />
       </Routes>
     </BrowserRouter>
   );
