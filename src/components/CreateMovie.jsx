@@ -7,7 +7,9 @@ function CreateMovie() {
   const [movieName, setMovieName] = useState("");
   const [topic, setTopic] = useState("");
   const [year, setYear] = useState(Number);
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoUrl, setPhotoUrl] = useState(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCIMGFCxokq8Vhi27FmgyPQOqSuolbXVQDNA&s"
+  );
 
   const moviesCollectionRef = collection(db, "Movies");
 

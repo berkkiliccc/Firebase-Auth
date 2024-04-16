@@ -46,7 +46,12 @@ function App() {
             currentUser === null ? <SignupPage /> : <Navigate to="/login" />
           }
         />
-        <Route path="/addmovie" element={<CreateMovie />} />
+        <Route
+          path="/addmovie"
+          element={
+            currentUser !== null ? <CreateMovie /> : <Navigate to="/login" />
+          }
+        />
         <Route path={`/movie/:movieId`} element={<Movie />} />
       </Routes>
     </BrowserRouter>
