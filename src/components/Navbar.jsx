@@ -26,8 +26,8 @@ function Navbar() {
   }, []);
 
   return (
-    <div>
-      <nav className="navbar has-background-grey ">
+    <>
+      <nav className="navbar has-background-grey is-fixed-top ">
         <div className="navbar-brand">
           <Link
             className="navbar-item has-text-primary"
@@ -83,7 +83,7 @@ function Navbar() {
           </div>
         </div>
       </nav>
-    </div>
+    </>
   );
 }
 

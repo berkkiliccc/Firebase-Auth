@@ -29,7 +29,7 @@ function App() {
       </div>
     );
   }
-  console.log(currentUser);
+  // console.log(currentUser);
 
   return (
     <BrowserRouter>

@@ -18,17 +18,18 @@ function CreateMovie() {
   const addMovie = async () => {
     try {
       await addDoc(moviesCollectionRef, {
-        Name: movieName,
-        Topic: topic,
-        CreateTime: new Date().toLocaleDateString("tr-TR", {
+        movieName: movieName,
+        movieTopic: topic,
+        createTime: new Date().toLocaleDateString("tr-TR", {
           year: "numeric",
           month: "long",
           day: "numeric",
         }),
-        Year: year,
-        PhotoUrl: photoUrl,
+        movieYear: year,
+        photoUrl: photoUrl,
         userId: auth.currentUser.uid,
         createdAt: auth.currentUser.displayName,
+        userPhotoUrl: auth.currentUser.photoURL,
       });
       navigate("/");
     } catch (error) {
@@ -37,9 +38,15 @@ function CreateMovie() {
   };
 
   return (
-    <>
-      <div className="vh-100 columns d-flex justify-content-center align-items-center hero-body  ">
+    <div className="hero is-fullheight   ">
+      <div className=" columns hero-body d-flex is-align-items-center is-justify-content-center text-center ">
         <div className="column is-3 ">
+          <h1
+            className="subtittle mb-3"
+            style={{ textDecoration: "underline" }}
+          >
+            Film Ekle
+          </h1>
           <div className="field">
             <label id="photoUrl" className="">
               Film Adı
@@ -94,19 +101,24 @@ function CreateMovie() {
               />
             </div>
           </div>
-          <div className="field is-grouped d-flex justify-content-center align-items-center hero-bod ">
+          <div className="field is-grouped d-flex justify-content-center align-items-center hero-body ">
             <div className="control">
               <button className="button is-link" onClick={addMovie}>
                 Submit
               </button>
             </div>
             <div className="control">
-              <button className="button is-link is-danger">Cancel</button>
+              <button
+                onClick={() => navigate("/")}
+                className="button is-link is-danger"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
