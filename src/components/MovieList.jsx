@@ -213,6 +213,7 @@ function MovieList() {
                     alt="Placeholder image"
                     style={{
                       borderRadius: "5px",
+                      objectFit: "contain",
                     }}
                   />
                 </figure>
@@ -230,7 +231,7 @@ function MovieList() {
                     </figure>
                   </div>
                   <div className="media-content d-flex is-align-items-center is-justify-content-center">
-                    <p className="title is-4 has-text-black ">
+                    <div className="title is-4 has-text-black ">
                       <Link
                         style={{ textDecoration: "none" }}
                         className="has-text-link"
@@ -238,12 +239,13 @@ function MovieList() {
                       >
                         {movie.movieName}
                       </Link>
+
                       <div className="card-content d-flex is-align-items-center is-justify-content-center">
                         <p className="subtitle is-6 ">
                           @{movie.createdAt.replaceAll(" ", "").toLowerCase()}
                         </p>
                       </div>
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>

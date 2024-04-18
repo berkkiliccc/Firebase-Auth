@@ -5,11 +5,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import Home from "./pages/index";
 import LoginPage from "./pages/LoginPage";
-import Navbar from "./components/Navbar";
+// import Navbar from "./components/Navbar";
 import { auth } from "./config/firebase";
 import SignupPage from "./pages/SignupPage";
 import CreateMovie from "./components/CreateMovie";
 import Movie from "./components/Movie";
+
+import Navbar from "./components/Navbar";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
