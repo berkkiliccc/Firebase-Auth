@@ -21,7 +21,7 @@ function Navbar() {
 
   const handleBurgerMenu = () => {
     setBurgerMenu(!burgerMenu);
-    console.log("clicked");
+    console.log("burgerMenu clicked", burgerMenu);
   };
 
   return (
@@ -66,30 +66,61 @@ function Navbar() {
       </div>
       <div
         id="navbar"
-        className={`navbar-menu  ${burgerMenu ? "is-active" : ""}`}
+        className={`navbar-menu  ${burgerMenu ? "is-active" : ""} `}
       >
-        <div className="navbar-start">
-          <div className="navbar-item">
-            <Link
-              to="/"
-              className="navbar-item"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              Home
-            </Link>
-            <Link
-              to="/addMovie"
-              className="navbar-item"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              Film Ekle
-            </Link>
+        {auth.currentUser && (
+          <div className="navbar-start">
+            <div className="navbar-item">
+              <Link
+                to="/"
+                className="navbar-item"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Home
+              </Link>
+
+              <Link
+                to="/movies"
+                className="navbar-item"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Filmler
+              </Link>
+              <Link
+                to="/addmovie"
+                className="navbar-item"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Film Ekle
+              </Link>
+              <Link
+                to="/diziler"
+                className="navbar-item"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Diziler
+              </Link>
+              <Link
+                to="/addseries"
+                className="navbar-item"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Dizi Ekle
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
+
         <div className="navbar-end mr-6">
           <div className="navbar-item">
             {auth.currentUser ? (
@@ -100,11 +131,27 @@ function Navbar() {
                 onClick={handleToggle}
               >
                 <span className="navbar-link" href="">
-                  <img src={auth?.currentUser?.photoURL} alt="" />
+                  <img
+                    src={auth?.currentUser?.photoURL}
+                    alt=""
+                    style={{ borderRadius: "20px" }}
+                  />
                 </span>
+
                 <div className="navbar-dropdown is-boxed mr-6">
                   <div className="navbar-item">
-                    <Link className="navbar-item" href="/">
+                    <span
+                      className="navbar-item has-background-grey-lighter has-text-dark"
+                      to="/"
+                    >
+                      {auth.currentUser.displayName}
+                    </span>
+                  </div>
+                  <div className="navbar-item">
+                    <Link
+                      className="navbar-item"
+                      to={`/profile/${auth.currentUser.uid}`}
+                    >
                       Profil
                     </Link>
                   </div>
@@ -118,7 +165,7 @@ function Navbar() {
                             : "button is-link "
                         }
                       >
-                        {currentUser ? "Logout" : "Login"}
+                        {currentUser ? "Çıkış Yap" : "Giriş Yap"}
                       </button>
                     </Link>
                   </div>
@@ -135,7 +182,7 @@ function Navbar() {
                         : "button is-link "
                     }
                   >
-                    {currentUser ? "Logout" : "Login"}
+                    {currentUser ? "Çıkış Yap" : "Giriş Yap"}
                   </button>
                 </Link>
               </div>
@@ -143,8 +190,6 @@ function Navbar() {
           </div>
         </div>
       </div>
-
-      <div className="navbar-item"></div>
     </nav>
   );
 }

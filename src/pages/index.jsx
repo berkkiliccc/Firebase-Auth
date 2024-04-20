@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import MovieList from "../components/MovieList";
 import { auth } from "../config/firebase";
+import SeriesList from "../components/SeriesList";
 
 function Home() {
   const currentUser = auth.currentUser;
@@ -36,27 +37,28 @@ function Home() {
         <div className="container py-6">
           <div className="row">
             <div className="col-md-12 text-center ">
-              <h1 className="text-center"></h1>
-              <h1 className="mt-6">
-                Hoşgeldin <br />
-                <span className="text-primary ">
-                  {currentUser.displayName.toUpperCase()}
-                </span>
-              </h1>
-              <img
-                className="mt-4 mb-5 rounded-circle border border-1 "
-                style={{ width: "100px" }}
-                src={currentUser.photoURL}
-                alt=""
-              />
               <div>
+                <hr />
+
+                <h1 className="text-center subtitle">Filmler</h1>
+                <hr />
                 <button className="btn btn-primary">
                   <Link to="/addmovie" className="text-white">
                     Film Ekle
                   </Link>
                 </button>
+                <MovieList />
               </div>
-              <MovieList />
+
+              <hr />
+              <h1 className="text-center subtitle">Diziler</h1>
+              <hr />
+              <button className="btn btn-primary">
+                <Link to="/addseries" className="text-white">
+                  Dizi Ekle
+                </Link>
+              </button>
+              <SeriesList />
             </div>
           </div>
         </div>

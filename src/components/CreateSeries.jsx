@@ -3,30 +3,30 @@ import { auth, db } from "../config/firebase";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function CreateMovie() {
-  const [movieName, setMovieName] = useState("");
+function CreateSeries() {
+  const [seriesName, setSeriesName] = useState("");
   const [topic, setTopic] = useState("");
   const [year, setYear] = useState(Number);
-  const [platform, setPlatform] = useState("Film");
+  const [platform, setPlatform] = useState("Dizi");
   const [photoUrl, setPhotoUrl] = useState(
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCIMGFCxokq8Vhi27FmgyPQOqSuolbXVQDNA&s"
   );
 
-  const moviesCollectionRef = collection(db, "Movies");
+  const seriesCollectionRef = collection(db, "Series");
 
   const navigate = useNavigate();
 
-  const addMovie = async () => {
+  const addSeries = async () => {
     try {
-      await addDoc(moviesCollectionRef, {
-        movieName: movieName,
-        movieTopic: topic,
+      await addDoc(seriesCollectionRef, {
+        seriesName: seriesName,
+        seriesTopic: topic,
         createTime: new Date().toLocaleDateString("tr-TR", {
           year: "numeric",
           month: "long",
           day: "numeric",
         }),
-        movieYear: year,
+        seriesYear: year,
         photoUrl: photoUrl,
         userId: auth.currentUser.uid,
         createdAt: auth.currentUser.displayName,
@@ -38,7 +38,6 @@ function CreateMovie() {
       console.log(error);
     }
   };
-
   return (
     <div className="hero is-fullheight   ">
       <div className=" columns hero-body d-flex is-align-items-center is-justify-content-center text-center ">
@@ -47,11 +46,11 @@ function CreateMovie() {
             className="subtittle mb-3"
             style={{ textDecoration: "underline" }}
           >
-            Film Ekle
+            Dizi Ekle
           </h1>
           <div className="field">
             <label id="photoUrl" className="">
-              Film Adı
+              Dizi Adı
             </label>
             <div className="control  ">
               <input
@@ -59,7 +58,7 @@ function CreateMovie() {
                 id="filmName"
                 type="text"
                 placeholder=""
-                onChange={(e) => setMovieName(e.target.value)}
+                onChange={(e) => setSeriesName(e.target.value)}
               />
             </div>
           </div>
@@ -106,7 +105,7 @@ function CreateMovie() {
 
           <div className="field is-grouped d-flex justify-content-center align-items-center hero-body ">
             <div className="control">
-              <button className="button is-link" onClick={addMovie}>
+              <button className="button is-link" onClick={addSeries}>
                 Submit
               </button>
             </div>
@@ -125,4 +124,4 @@ function CreateMovie() {
   );
 }
 
-export default CreateMovie;
+export default CreateSeries;

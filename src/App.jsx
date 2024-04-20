@@ -5,13 +5,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import Home from "./pages/index";
 import LoginPage from "./pages/LoginPage";
-// import Navbar from "./components/Navbar";
 import { auth } from "./config/firebase";
 import SignupPage from "./pages/SignupPage";
 import CreateMovie from "./components/CreateMovie";
 import Movie from "./components/Movie";
-
 import Navbar from "./components/Navbar";
+import MovieList from "./components/MovieList";
+import Profile from "./components/Profile";
+import CreateSeries from "./components/CreateSeries";
+import SeriesList from "./components/SeriesList";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -55,6 +57,25 @@ function App() {
           }
         />
         <Route path={`/movie/:movieId`} element={<Movie />} />
+        <Route
+          path={"/movies"}
+          element={
+            currentUser !== null ? <MovieList /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path={"/diziler"}
+          element={
+            currentUser !== null ? <SeriesList /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/addseries"
+          element={
+            currentUser !== null ? <CreateSeries /> : <Navigate to="/login" />
+          }
+        />
+        <Route path={"/profile/:userId"} element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );

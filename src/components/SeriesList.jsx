@@ -9,33 +9,33 @@ import { auth, db } from "../config/firebase";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-function MovieList() {
-  const [movieList, setMovieList] = useState([]);
+function SeriesList() {
+  const [seriesList, setSeriesList] = useState([]);
 
   const [openModal, setOpenModal] = useState(false);
-  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const [selectedSeriesId, setSelectedSeriesId] = useState(null);
 
-  const [newMovieName, setNewMovieName] = useState("");
-  const [newMovieTopic, setNewMovieTopic] = useState("");
-  const [newMovieYear, setNewMovieYear] = useState("");
+  const [newSeriesName, setNewSeriesName] = useState("");
+  const [newSeriesTopic, setNewSeriesTopic] = useState("");
+  const [newSeriesYear, setNewSeriesYear] = useState("");
   const [newPhotoUrl, setNewPhotoUrl] = useState("");
 
   useEffect(() => {
-    getMovieList();
-    console.log("MovieList component mounted");
+    getSeriesList();
+    console.log("SriesList component mounted");
   }, []);
 
-  const moviesCollectionRef = collection(db, "Movies");
+  const seriesCollectionRef = collection(db, "Series");
 
-  const getMovieList = async () => {
+  const getSeriesList = async () => {
     try {
-      const data = await getDocs(moviesCollectionRef);
+      const data = await getDocs(seriesCollectionRef);
       const filteredData = data.docs.map((doc) => ({
         id: doc.id,
-        movieName: doc.data().movieName,
-        movieTopic: doc.data().movieTopic,
+        seriesName: doc.data().seriesName,
+        seriesTopic: doc.data().seriesTopic,
         createTime: doc.data().createTime,
-        movieYear: doc.data().movieYear,
+        seriesYear: doc.data().seriesYear,
         photoUrl: doc.data().photoUrl,
         createdAt: doc.data().createdAt,
         userId: doc.data().userId,
@@ -43,7 +43,7 @@ function MovieList() {
         platform: doc.data().platform,
       }));
 
-      setMovieList(filteredData);
+      setSeriesList(filteredData);
 
       // console.log("MovieList =>", filteredData);
     } catch (error) {
@@ -53,10 +53,10 @@ function MovieList() {
 
   const handleDelete = async (id) => {
     try {
-      const movieDoc = doc(moviesCollectionRef, id);
-      await deleteDoc(movieDoc);
+      const seriesDoc = doc(seriesCollectionRef, id);
+      await deleteDoc(seriesDoc);
       console.log("Document successfully deleted!");
-      getMovieList();
+      getSeriesList();
     } catch (error) {
       console.error("Error removing document: ", error);
     }
@@ -65,14 +65,14 @@ function MovieList() {
   const handleEdit = async (id) => {
     try {
       console.log("Edit clicked", id);
-      setSelectedMovieId(id);
+      setSelectedSeriesId(id);
       setOpenModal(true);
 
-      const selectedMovie = movieList.find((movie) => movie.id === id);
-      setNewMovieName(selectedMovie.movieName);
-      setNewMovieTopic(selectedMovie.movieTopic);
-      setNewMovieYear(selectedMovie.movieYear);
-      setNewPhotoUrl(selectedMovie.photoUrl);
+      const selectedSeries = seriesList.find((series) => series.id === id);
+      setNewSeriesName(selectedSeries.seriesName);
+      setNewSeriesTopic(selectedSeries.seriesTopic);
+      setNewSeriesYear(selectedSeries.seriesYear);
+      setNewPhotoUrl(selectedSeries.photoUrl);
     } catch (error) {
       console.log(error);
     }
@@ -84,11 +84,11 @@ function MovieList() {
 
   const handleSave = async (id) => {
     try {
-      const movieDoc = doc(moviesCollectionRef, id);
-      await updateDoc(movieDoc, {
-        movieName: newMovieName,
-        movieTopic: newMovieTopic,
-        movieYear: newMovieYear,
+      const serieDoc = doc(seriesCollectionRef, id);
+      await updateDoc(serieDoc, {
+        seriesName: newSeriesName,
+        seriesTopic: newSeriesTopic,
+        seriesYear: newSeriesTopic,
         photoUrl: newPhotoUrl,
         createTime: new Date().toLocaleDateString("tr-TR", {
           year: "numeric",
@@ -96,7 +96,7 @@ function MovieList() {
           day: "numeric",
         }),
       });
-      getMovieList();
+      getSeriesList();
       setOpenModal(false);
     } catch (error) {
       console.log(error);
@@ -112,8 +112,8 @@ function MovieList() {
             <header className="modal-card-head  ">
               <p className="modal-card-title has-text-grey-lighter">
                 {
-                  movieList.find((movie) => movie.id === selectedMovieId)
-                    .movieName
+                  seriesList.find((series) => series.id === selectedSeriesId)
+                    .seriesName
                 }
               </p>
               <button
@@ -122,10 +122,10 @@ function MovieList() {
                 onClick={closeModal}
               />
             </header>
-            <section className="modal-card-body">
-              {movieList.map((movie) => (
-                <div key={movie.id}>
-                  {movie.id === selectedMovieId && (
+            <section className="modal-card-body ">
+              {seriesList.map((series) => (
+                <div key={series.id}>
+                  {series.id === selectedSeriesId && (
                     <div>
                       <div className="field">
                         <label className="label">Film Adı</label>
@@ -133,8 +133,8 @@ function MovieList() {
                           <input
                             className="input"
                             type="text"
-                            value={newMovieName}
-                            onChange={(e) => setNewMovieName(e.target.value)}
+                            value={newSeriesName}
+                            onChange={(e) => setNewSeriesName(e.target.value)}
                             required
                           />
                         </div>
@@ -144,8 +144,8 @@ function MovieList() {
                         <div className="control">
                           <textarea
                             className="textarea"
-                            value={newMovieTopic}
-                            onChange={(e) => setNewMovieTopic(e.target.value)}
+                            value={newSeriesTopic}
+                            onChange={(e) => setNewSeriesTopic(e.target.value)}
                             required
                           />
                         </div>
@@ -156,8 +156,8 @@ function MovieList() {
                           <input
                             className="input"
                             type="text"
-                            value={newMovieYear}
-                            onChange={(e) => setNewMovieYear(e.target.value)}
+                            value={newSeriesYear}
+                            onChange={(e) => setNewSeriesYear(e.target.value)}
                             required
                           />
                         </div>
@@ -168,7 +168,7 @@ function MovieList() {
                           <input
                             className="input"
                             type="text"
-                            defaultValue={movie.photoUrl}
+                            defaultValue={series.photoUrl}
                             onChange={(e) => setNewPhotoUrl(e.target.value)}
                             required
                           />
@@ -183,7 +183,7 @@ function MovieList() {
               <div className="buttons">
                 <button
                   className="button is-success"
-                  onClick={() => handleSave(selectedMovieId)}
+                  onClick={() => handleSave(selectedSeriesId)}
                 >
                   Kaydet
                 </button>
@@ -203,17 +203,17 @@ function MovieList() {
       )}
 
       <div className="hero is-fullheight">
-        <div className="columns is-multiline m-4 ">
-          {movieList.map((movie) => (
+        <div className="columns is-multiline m-4">
+          {seriesList.map((series) => (
             <div
-              key={movie.id}
+              key={series.id}
               className="column is-justify-content-center is-one-third  "
             >
               <div className="card " style={{ height: "99%" }}>
                 <div className="card-image">
                   <figure className="image is-4by3">
                     <img
-                      src={movie.photoUrl}
+                      src={series.photoUrl}
                       alt="Placeholder image"
                       style={{
                         borderRadius: "5px",
@@ -228,7 +228,7 @@ function MovieList() {
                     <div className="media-right">
                       <figure className="image is-48x48 ">
                         <img
-                          src={movie.userPhotoUrl}
+                          src={series.userPhotoUrl}
                           alt=""
                           className="is-rounded"
                         />
@@ -239,14 +239,15 @@ function MovieList() {
                         <Link
                           style={{ textDecoration: "none" }}
                           className="has-text-link"
-                          to={`/movie/${movie.id}`}
+                          to={`/series/${series.id}`}
                         >
-                          {movie.movieName}
+                          {series.serieName}
                         </Link>
 
                         <div className="card-content d-flex is-align-items-center is-justify-content-center">
                           <p className="subtitle is-6 ">
-                            @{movie.createdAt.replaceAll(" ", "").toLowerCase()}
+                            @
+                            {series.createdAt.replaceAll(" ", "").toLowerCase()}
                           </p>
                         </div>
                       </div>
@@ -258,29 +259,29 @@ function MovieList() {
                   className="card-content d-flex is-align-items-center is-justify-content-center "
                   style={{ height: 200 }}
                 >
-                  {movie.movieTopic}.
+                  {series.seriesTopic}.
                   <br />
                 </div>
                 <div className="card-content d-flex is-align-items-center is-justify-content-center">
-                  <a>#{movie.movieName.replaceAll(" ", "").toLowerCase()}</a>
+                  <a>#{series.seriesName.replaceAll(" ", "").toLowerCase()}</a>
                 </div>
 
                 <div className="card-content  ">
-                  <a>Film Çıkış Yılı: {movie?.movieYear}</a>
+                  <a>Film Çıkış Yılı: {series?.seriesYear}</a>
                   <br />
-                  <a>Oluşturulma Tarihi: {movie?.createTime}</a>
+                  <a>Oluşturulma Tarihi: {series?.createTime}</a>
                 </div>
 
-                {auth.currentUser.uid === movie.userId && (
+                {auth.currentUser.uid === series.userId && (
                   <footer className="card-footer ">
                     <button
                       className="button is-link m-1 card-footer-item"
-                      onClick={() => handleEdit(movie.id)}
+                      onClick={() => handleEdit(series.id)}
                     >
                       Düzenle
                     </button>
                     <button
-                      onClick={() => handleDelete(movie.id)}
+                      onClick={() => handleDelete(series.id)}
                       className="button is-danger m-1 card-footer-item"
                     >
                       Sil
@@ -295,4 +296,5 @@ function MovieList() {
     </>
   );
 }
-export default MovieList;
+
+export default SeriesList;
