@@ -1,29 +1,32 @@
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "../config/firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../../config/firebase";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-function LoginPage() {
+function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const navigate = useNavigate();
 
-  const handleGoogleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      console.log("Google Login Success");
-      navigate("/");
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const defaultPhotoURL =
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png";
 
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      console.log("Login Success");
-      navigate("/");
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+
+      console.log("Signup Success", user);
+
+      await updateProfile(user.user, {
+        displayName: `${firstName} ${lastName}`,
+        photoURL: defaultPhotoURL,
+      });
+
+      //
+      navigate("/login");
     } catch (e) {
       console.error(e);
     }
@@ -37,7 +40,7 @@ function LoginPage() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleLogin();
+              handleSignup();
             }}
           >
             <div className="mb-3">
@@ -71,32 +74,50 @@ function LoginPage() {
                 }}
               />
             </div>
+
+            <div className="input-group mb-3">
+              <label className="input-group-text" htmlFor="firstName">
+                @
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="İsim"
+                aria-label="Username"
+                id="firstName"
+                onChange={(e) => {
+                  setFirstName(e.target.value);
+                }}
+              />
+              <label className="input-group-text" htmlFor="lastName">
+                @
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Soyisim"
+                aria-label="lastName"
+                id="lastName"
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                }}
+              />
+            </div>
+
             <div className="d-flex align-items-center justify-content-center ">
               <button
                 className="btn btn-lg btn-primary btn-block "
                 type="submit"
               >
-                Giriş Yap
+                Kayıt Ol
               </button>
             </div>
             <p className="text-center mt-3">
-              Hesabın yok mu?
-              <Link to="/signup" style={{ textDecoration: "none" }}>
-                <span className="fs-5 "> Kayıt Ol</span>
+              Hesabın var mı ?
+              <Link to="/login" style={{ textDecoration: "none" }}>
+                <span className="fs-6 "> Giriş Sayfası</span>
               </Link>
             </p>
-
-            <hr className="border border-danger border-2 opacity-50" />
-
-            <div className="d-flex align-items-center justify-content-center ">
-              <button
-                onClick={handleGoogleLogin}
-                className="btn btn-lg btn-danger btn-block "
-                type="button"
-              >
-                <i className="bi bi-google"> Google Ile Giris yap</i>
-              </button>
-            </div>
           </form>
         </div>
       </div>
@@ -104,4 +125,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default SignupPage;

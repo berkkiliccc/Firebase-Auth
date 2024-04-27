@@ -24,3 +24,10 @@ Bu projede firebase kullanarak auth işlemi yapıldı.
 ## Hosting
 
 fir-auth-project-berk.web.app
+
+## TODO
+
+Cardlari components icine al kullan
+Pages ve componentsleri duzelt klasor icine al
+Database movieyear vb. year yap
+Createleri birlestir select yap movie ya da series diye secsin

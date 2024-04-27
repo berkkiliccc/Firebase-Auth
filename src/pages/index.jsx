@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import MovieList from "../components/MovieList";
+import { MoviesList } from "../components";
 import { auth } from "../config/firebase";
-import SeriesList from "../components/SeriesList";
+import SeriesList from "./series/SeriesList";
 
 function Home() {
   const currentUser = auth.currentUser;
@@ -47,7 +47,7 @@ function Home() {
                     Film Ekle
                   </Link>
                 </button>
-                <MovieList />
+                <MoviesList />
               </div>
 
               <hr />

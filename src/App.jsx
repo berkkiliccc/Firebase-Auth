@@ -4,16 +4,17 @@ import { onAuthStateChanged } from "firebase/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Home from "./pages/index";
-import LoginPage from "./pages/LoginPage";
+import LoginPage from "./pages/auth/LoginPage";
 import { auth } from "./config/firebase";
-import SignupPage from "./pages/SignupPage";
-import CreateMovie from "./components/CreateMovie";
-import Movie from "./components/Movie";
-import Navbar from "./components/Navbar";
-import MovieList from "./components/MovieList";
-import Profile from "./components/Profile";
-import CreateSeries from "./components/CreateSeries";
-import SeriesList from "./components/SeriesList";
+import SignupPage from "./pages/auth/SignupPage";
+import CreateMovie from "./pages/movie/MovieCreate";
+import Movie from "./pages/movie/MovieDetail";
+import { Navbar, MoviesList } from "./components";
+import Profile from "./pages/Profile";
+import CreateSeries from "./pages/series/SeriesCreate";
+import SeriesList from "./pages/series/SeriesList";
+import Settings from "./components/Settings";
+import Series from "./pages/series/SeriesDetail";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -60,7 +61,7 @@ function App() {
         <Route
           path={"/movies"}
           element={
-            currentUser !== null ? <MovieList /> : <Navigate to="/login" />
+            currentUser !== null ? <MoviesList /> : <Navigate to="/login" />
           }
         />
         <Route
@@ -69,6 +70,7 @@ function App() {
             currentUser !== null ? <SeriesList /> : <Navigate to="/login" />
           }
         />
+        <Route path={`/series/:seriesId`} element={<Series />} />
         <Route
           path="/addseries"
           element={
@@ -76,6 +78,12 @@ function App() {
           }
         />
         <Route path={"/profile/:userId"} element={<Profile />} />
+        <Route
+          path={"/profile/:userId/settings"}
+          element={
+            currentUser !== null ? <Settings /> : <Navigate to="/login" />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

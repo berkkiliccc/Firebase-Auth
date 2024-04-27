@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../config/firebase";
+import { auth } from "../../config/firebase";
 import { signOut } from "firebase/auth";
 import { useState } from "react";
 
@@ -68,7 +68,7 @@ function Navbar() {
         id="navbar"
         className={`navbar-menu  ${burgerMenu ? "is-active" : ""} `}
       >
-        {auth.currentUser && (
+        {currentUser && (
           <div className="navbar-start">
             <div className="navbar-item">
               <Link
@@ -123,7 +123,7 @@ function Navbar() {
 
         <div className="navbar-end mr-6">
           <div className="navbar-item">
-            {auth.currentUser ? (
+            {currentUser ? (
               <div
                 className={`navbar-item has-dropdown ${
                   isActive ? "is-active" : null
@@ -132,7 +132,7 @@ function Navbar() {
               >
                 <span className="navbar-link" href="">
                   <img
-                    src={auth?.currentUser?.photoURL}
+                    src={currentUser?.photoURL}
                     alt=""
                     style={{ borderRadius: "20px" }}
                   />
@@ -144,15 +144,23 @@ function Navbar() {
                       className="navbar-item has-background-grey-lighter has-text-dark"
                       to="/"
                     >
-                      {auth.currentUser.displayName}
+                      {currentUser.displayName}
                     </span>
                   </div>
                   <div className="navbar-item">
                     <Link
                       className="navbar-item"
-                      to={`/profile/${auth.currentUser.uid}`}
+                      to={`/profile/${currentUser.uid}`}
                     >
                       Profil
+                    </Link>
+                  </div>
+                  <div className="navbar-item">
+                    <Link
+                      className="navbar-item"
+                      to={`/profile/${currentUser.uid}/settings`}
+                    >
+                      Ayarlar
                     </Link>
                   </div>
                   <div className="navbar-item">

@@ -1,43 +1,44 @@
 import { addDoc, collection } from "firebase/firestore";
-import { auth, db } from "../config/firebase";
+import { auth, db } from "../../config/firebase";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function CreateSeries() {
-  const [seriesName, setSeriesName] = useState("");
+function CreateMovie() {
+  const [title, setTitle] = useState("");
   const [topic, setTopic] = useState("");
   const [year, setYear] = useState(Number);
-  const [platform, setPlatform] = useState("Dizi");
+  const [platform, setPlatform] = useState("movie");
   const [photoUrl, setPhotoUrl] = useState(
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCIMGFCxokq8Vhi27FmgyPQOqSuolbXVQDNA&s"
   );
 
-  const seriesCollectionRef = collection(db, "Series");
+  const moviesCollectionRef = collection(db, "Movies");
 
   const navigate = useNavigate();
 
-  const addSeries = async () => {
+  const addMovie = async () => {
     try {
-      await addDoc(seriesCollectionRef, {
-        seriesName: seriesName,
-        seriesTopic: topic,
-        createTime: new Date().toLocaleDateString("tr-TR", {
+      await addDoc(moviesCollectionRef, {
+        title: title,
+        topic: topic,
+        createdAt: new Date().toLocaleDateString("tr-TR", {
           year: "numeric",
           month: "long",
           day: "numeric",
         }),
-        seriesYear: year,
+        year: year,
         photoUrl: photoUrl,
         userId: auth.currentUser.uid,
-        createdAt: auth.currentUser.displayName,
+        createdBy: auth.currentUser.displayName,
         userPhotoUrl: auth.currentUser.photoURL,
-        platform: platform,
+        type: platform,
       });
       navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
     <div className="hero is-fullheight   ">
       <div className=" columns hero-body d-flex is-align-items-center is-justify-content-center text-center ">
@@ -46,11 +47,11 @@ function CreateSeries() {
             className="subtittle mb-3"
             style={{ textDecoration: "underline" }}
           >
-            Dizi Ekle
+            Film Ekle
           </h1>
           <div className="field">
             <label id="photoUrl" className="">
-              Dizi Adı
+              Film Adı
             </label>
             <div className="control  ">
               <input
@@ -58,7 +59,7 @@ function CreateSeries() {
                 id="filmName"
                 type="text"
                 placeholder=""
-                onChange={(e) => setSeriesName(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
               />
             </div>
           </div>
@@ -105,13 +106,13 @@ function CreateSeries() {
 
           <div className="field is-grouped d-flex justify-content-center align-items-center hero-body ">
             <div className="control">
-              <button className="button is-link" onClick={addSeries}>
+              <button className="button is-link" onClick={addMovie}>
                 Submit
               </button>
             </div>
             <div className="control">
               <button
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/movies")}
                 className="button is-link is-danger"
               >
                 Cancel
@@ -124,4 +125,4 @@ function CreateSeries() {
   );
 }
 
-export default CreateSeries;
+export default CreateMovie;
