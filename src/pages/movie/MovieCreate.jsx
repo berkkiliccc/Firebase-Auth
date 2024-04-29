@@ -1,4 +1,4 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../config/firebase";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,9 @@ function CreateMovie() {
   const navigate = useNavigate();
 
   const addMovie = async () => {
+    const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+    const userData = userDoc.data();
+    const res = userData.profilePicture;
     try {
       await addDoc(moviesCollectionRef, {
         title: title,
@@ -30,7 +33,7 @@ function CreateMovie() {
         photoUrl: photoUrl,
         userId: auth.currentUser.uid,
         createdBy: auth.currentUser.displayName,
-        userPhotoUrl: auth.currentUser.photoURL,
+        userPhotoUrl: res,
         type: platform,
       });
       navigate("/");

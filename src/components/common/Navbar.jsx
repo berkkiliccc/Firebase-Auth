@@ -131,14 +131,20 @@ function Navbar() {
                 onClick={handleToggle}
               >
                 <span className="navbar-link" href="">
-                  <img
-                    src={currentUser?.photoURL}
-                    alt=""
-                    style={{ borderRadius: "20px" }}
-                  />
+                  <figure className="image is-32x32 pt-2">
+                    <img
+                      className=" is-rounded"
+                      src={currentUser?.photoURL}
+                      alt=""
+                      style={{
+                        width: "32px",
+                        height: "32px",
+                      }}
+                    />
+                  </figure>
                 </span>
 
-                <div className="navbar-dropdown is-boxed mr-6">
+                <div className="navbar-dropdown is-boxed">
                   <div className="navbar-item">
                     <span
                       className="navbar-item has-background-grey-lighter has-text-dark"

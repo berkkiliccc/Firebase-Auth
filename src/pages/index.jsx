@@ -30,6 +30,7 @@ function Home() {
       </div>
     );
   }
+  console.log(currentUser);
 
   return (
     <div className="hero is-fullheight">

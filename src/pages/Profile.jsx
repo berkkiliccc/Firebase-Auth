@@ -86,6 +86,7 @@ function Profile() {
                 className="is-rounded"
                 src={auth.currentUser.photoURL}
                 alt="Placeholder image"
+                style={{ width: "128px", height: "128px" }}
               />
             </figure>
           </div>

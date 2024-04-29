@@ -1,7 +1,8 @@
 import { addDoc, collection } from "firebase/firestore";
-import { auth, db } from "../../config/firebase";
+import { auth, db, storage } from "../../config/firebase";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 
 function CreateSeries() {
   const [title, setTitle] = useState("");
@@ -18,6 +19,18 @@ function CreateSeries() {
 
   const addSeries = async () => {
     try {
+      const userUid = auth.currentUser.uid;
+      // Kullanıcının profil fotoğrafının referansını oluştur
+      const profilePictureRef = ref(storage, `profilePicture/${userUid}`);
+      // Dizindeki dosyaları listele
+      const listResult = await listAll(profilePictureRef);
+      // İlk dosyanın adını al (dizin sadece bir dosya içerdiğinden emin olduğumuz için)
+      const fileName = listResult.items[0].name;
+      // Fotoğrafın referansını oluştur
+      const photoRef = ref(storage, `profilePicture/${userUid}/${fileName}`);
+      // Fotoğrafın URL'sini al
+      const profilePhotoUrl = await getDownloadURL(photoRef);
+
       await addDoc(seriesCollectionRef, {
         title: title,
         topic: topic,
@@ -30,7 +43,7 @@ function CreateSeries() {
         photoUrl: photoUrl,
         userId: auth.currentUser.uid,
         createdBy: auth.currentUser.displayName,
-        userPhotoUrl: auth.currentUser.photoURL,
+        userPhotoUrl: profilePhotoUrl,
         type: platform,
       });
       navigate("/");

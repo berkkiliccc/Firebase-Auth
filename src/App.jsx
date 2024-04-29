@@ -13,7 +13,7 @@ import { Navbar, MoviesList } from "./components";
 import Profile from "./pages/Profile";
 import CreateSeries from "./pages/series/SeriesCreate";
 import SeriesList from "./pages/series/SeriesList";
-import Settings from "./components/Settings";
+import Settings from "./pages/Settings";
 import Series from "./pages/series/SeriesDetail";
 
 function App() {

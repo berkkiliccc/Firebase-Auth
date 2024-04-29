@@ -1,7 +1,10 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { auth, db, storage } from "../../config/firebase";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import defaultProfilePicture from "../../assets/defaultpicture.png";
+import { doc, setDoc } from "firebase/firestore";
 
 function SignupPage() {
   const [email, setEmail] = useState("");
@@ -11,24 +14,51 @@ function SignupPage() {
 
   const navigate = useNavigate();
 
-  const defaultPhotoURL =
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png";
-
   const handleSignup = async () => {
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      console.log(userCredential.user);
 
       console.log("Signup Success", user);
 
-      await updateProfile(user.user, {
+      // Resmi indir ve Blob olarak al
+      const response = await fetch(defaultProfilePicture);
+      const blob = await response.blob();
+
+      // Profil resminin yükleneceği konumu belirle
+      const profilePictureRef = ref(
+        storage,
+        `profilePicture/${user.uid}/defaultpicture.png`
+      );
+
+      // Blob'u yükle
+      await uploadBytes(profilePictureRef, blob);
+
+      // Profil resminin URL'sini al
+      const profilePictureURL = await getDownloadURL(profilePictureRef);
+
+      // Kullanıcının profilini güncelle, varsayılan profil resmi ile
+      await updateProfile(user, {
         displayName: `${firstName} ${lastName}`,
-        photoURL: defaultPhotoURL,
+        photoURL: profilePictureURL,
       });
 
-      //
+      await setDoc(doc(db, "users", user.uid), {
+        userId: user.uid,
+        email: user.email,
+        displayName: `${firstName} ${lastName}`,
+        profilePicture: profilePictureURL,
+      });
+
+      // Giriş sayfasına yönlendir
       navigate("/login");
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     }
   };
 

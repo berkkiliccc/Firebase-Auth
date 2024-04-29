@@ -1,7 +1,15 @@
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "../../config/firebase";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
+import { auth, db, googleProvider, storage } from "../../config/firebase";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+
+import defaultProfilePicture from "../../assets/defaultpicture.png";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,6 +21,27 @@ function LoginPage() {
     try {
       await signInWithPopup(auth, googleProvider);
       console.log("Google Login Success");
+
+      const user = auth.currentUser;
+      const response = await fetch(defaultProfilePicture);
+
+      const blob = await response.blob();
+      const profilePictureRef = ref(
+        storage,
+        `profilePicture/${user.uid}/defaultpicture.png`
+      );
+      await uploadBytes(profilePictureRef, blob);
+      const profilePictureURL = await getDownloadURL(profilePictureRef);
+      await updateProfile(user, {
+        photoURL: profilePictureURL,
+      });
+
+      await setDoc(doc(db, "users", user.uid), {
+        userId: auth.currentUser.uid,
+        email: auth.currentUser.email,
+        displayName: auth.currentUser.displayName,
+        profilePicture: auth.currentUser.photoURL,
+      });
       navigate("/");
     } catch (e) {
       console.error(e);

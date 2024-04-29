@@ -37,7 +37,15 @@ function MovieCard({
         <div className="media">
           <div className="media-right">
             <figure className="image is-48x48 ">
-              <img src={userPhotoUrl} alt="" className="is-rounded" />
+              <img
+                src={userPhotoUrl}
+                alt=""
+                className="is-rounded"
+                style={{
+                  width: "48px",
+                  height: "48px",
+                }}
+              />
             </figure>
           </div>
           <div className="media-content d-flex is-align-items-center is-justify-content-center">
