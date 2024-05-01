@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import MovieCard from "../../components/MovieCard";
+import MovieCard from "../../hooks/MovieCard";
 import useSeries from "../../hooks/useSeries";
 
 function SeriesList() {

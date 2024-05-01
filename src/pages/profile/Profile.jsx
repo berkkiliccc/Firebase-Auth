@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { auth, db } from "../config/firebase";
+import { auth, db } from "../../config/firebase";
 import { useEffect, useState } from "react";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import MovieCard from "../components/MovieCard";
-import useMovies from "../hooks/useMovies";
-import useSeries from "../hooks/useSeries";
+import MovieCard from "../../hooks/MovieCard";
+import useMovies from "../../hooks/useMovies";
+import useSeries from "../../hooks/useSeries";
 
 function Profile() {
   const [movies, setMovies] = useState([]);

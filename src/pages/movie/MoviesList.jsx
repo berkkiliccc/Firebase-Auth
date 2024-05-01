@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import MovieCard from "../../components/MovieCard";
+import MovieCard from "../../hooks/MovieCard";
 import useMovies from "../../hooks/useMovies";
 
 function MovieList() {

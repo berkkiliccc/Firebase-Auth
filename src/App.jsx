@@ -1,20 +1,24 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import Home from "./pages/index";
-import LoginPage from "./pages/auth/LoginPage";
 import { auth } from "./config/firebase";
-import SignupPage from "./pages/auth/SignupPage";
-import CreateMovie from "./pages/movie/MovieCreate";
-import Movie from "./pages/movie/MovieDetail";
-import { Navbar, MoviesList } from "./components";
-import Profile from "./pages/Profile";
+
+import { MoviesList, Navbar } from "./components";
+
+import Series from "./pages/series/SeriesDetail";
 import CreateSeries from "./pages/series/SeriesCreate";
 import SeriesList from "./pages/series/SeriesList";
-import Settings from "./pages/Settings";
-import Series from "./pages/series/SeriesDetail";
+import CreateMovie from "./pages/movie/MovieCreate";
+import Movie from "./pages/movie/MovieDetail";
+import Settings from "./pages/settings/Settings";
+import SignupPage from "./pages/auth/SignupPage";
+import LoginPage from "./pages/auth/LoginPage";
+import Home from "./pages";
+import Profile from "./pages/profile/Profile";
+import EditeSeriesModal from "./pages/EditeModal/EditeSeriesModal";
+import EditeMovieModal from "./pages/EditeModal/EditeMovieModal";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -34,8 +38,6 @@ function App() {
       </div>
     );
   }
-  // console.log(currentUser);
-
   return (
     <BrowserRouter>
       <Navbar />
@@ -51,32 +53,6 @@ function App() {
             currentUser === null ? <SignupPage /> : <Navigate to="/login" />
           }
         />
-        <Route
-          path="/addmovie"
-          element={
-            currentUser !== null ? <CreateMovie /> : <Navigate to="/login" />
-          }
-        />
-        <Route path={`/movie/:movieId`} element={<Movie />} />
-        <Route
-          path={"/movies"}
-          element={
-            currentUser !== null ? <MoviesList /> : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path={"/diziler"}
-          element={
-            currentUser !== null ? <SeriesList /> : <Navigate to="/login" />
-          }
-        />
-        <Route path={`/series/:seriesId`} element={<Series />} />
-        <Route
-          path="/addseries"
-          element={
-            currentUser !== null ? <CreateSeries /> : <Navigate to="/login" />
-          }
-        />
         <Route path={"/profile/:userId"} element={<Profile />} />
         <Route
           path={"/profile/:userId/settings"}
@@ -84,6 +60,34 @@ function App() {
             currentUser !== null ? <Settings /> : <Navigate to="/login" />
           }
         />
+        <Route
+          path="/addmovie"
+          element={
+            currentUser !== null ? <CreateMovie /> : <Navigate to="/login" />
+          }
+        />
+        <Route path={`/movie/:movieId`} element={<Movie />} />
+        <Route path={`/movie/:movieId/edit`} element={<EditeMovieModal />} />
+        <Route
+          path="/movies"
+          element={
+            currentUser !== null ? <MoviesList /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/diziler"
+          element={
+            currentUser !== null ? <SeriesList /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/addseries"
+          element={
+            currentUser !== null ? <CreateSeries /> : <Navigate to="/login" />
+          }
+        />
+        <Route path={`/series/:seriesId`} element={<Series />} />
+        <Route path={`/series/:seriesId/edit`} element={<EditeSeriesModal />} />
       </Routes>
     </BrowserRouter>
   );

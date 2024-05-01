@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { auth } from "../config/firebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function MovieCard({
   userPhotoUrl,
@@ -18,6 +18,8 @@ function MovieCard({
   type,
 }) {
   const [deleting, setDeleting] = useState(false);
+
+  const navigate = useNavigate();
   return (
     <div className="card " style={{ height: "99%" }}>
       <div className="card-image">
@@ -87,9 +89,13 @@ function MovieCard({
 
       {auth.currentUser.uid === userId && (
         <footer className="card-footer ">
-          <button className="button is-link m-1 card-footer-item">
+          <button
+            onClick={() => navigate(`/${type}/${id}/edit`)}
+            className="button is-link m-1 card-footer-item"
+          >
             Düzenle
           </button>
+
           <button
             onClick={() => {
               handleDelete(id), setDeleting(true);

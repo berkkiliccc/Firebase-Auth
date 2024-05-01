@@ -86,7 +86,10 @@ function Movie() {
                 </div>
                 {auth.currentUser.uid === movie?.userId && (
                   <footer className="card-footer ">
-                    <button className="button is-link m-1 card-footer-item">
+                    <button
+                      onClick={() => navigate(`/movie/${movieId}/edit`)}
+                      className="button is-link m-1 card-footer-item"
+                    >
                       Düzenle
                     </button>
                     <button

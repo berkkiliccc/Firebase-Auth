@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { auth, db, storage } from "../config/firebase";
+import { auth, db, storage } from "../../config/firebase";
 import {
   ref,
   uploadBytes,
@@ -215,6 +215,23 @@ function Settings() {
                     </p>
                   </div>
                 </div>
+                {/* <div className="field">
+                  <label className="label has-text-black text-center">
+                    Cinsiyet
+                  </label>
+                  <div className="select is-link is-rounded is-hovered">
+                    <select className="has-background-white" disabled>
+                      <option value="" className="has-text-black"></option>
+                      <option value="Erkek" className="has-text-black">
+                        Erkek
+                      </option>
+                      <option value="Kadın" className="has-text-black">
+                        Kadın
+                      </option>
+                    </select>
+                  </div>
+                </div> */}
+
                 <div className="field">
                   <label className="label has-text-black text-center">
                     Cinsiyet
