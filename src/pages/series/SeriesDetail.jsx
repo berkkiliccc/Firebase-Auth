@@ -85,7 +85,10 @@ function Series() {
                 </div>
                 {auth.currentUser.uid === serie?.userId && (
                   <footer className="card-footer ">
-                    <button className="button is-link m-1 card-footer-item">
+                    <button
+                      onClick={() => navigate(`/series/${seriesId}/edit`)}
+                      className="button is-link m-1 card-footer-item"
+                    >
                       Düzenle
                     </button>
                     <button

@@ -1,8 +1,9 @@
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { db } from "../../config/firebase";
+import { db, storage } from "../../config/firebase";
 import useMovies from "../../hooks/useMovies";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 function EditeMovieModal() {
   const { movie, getMovie } = useMovies();
@@ -17,16 +18,15 @@ function EditeMovieModal() {
   });
 
   const [loading, setLoading] = useState(true);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
-    // getMovie fonksiyonunu movieId değeri değiştiğinde tekrar çağır
     if (movieId) {
       setLoading(true);
       getMovie(movieId).then(() => setLoading(false));
     }
   }, []);
 
-  // movie state'i güncellendiğinde editedMovie state'ini de güncelle
   useEffect(() => {
     if (movie) {
       setEditedMovie({
@@ -47,8 +47,39 @@ function EditeMovieModal() {
       year: editedMovie.year,
       photoUrl: editedMovie.photoUrl,
     });
+
+    if (file) {
+      const fileRef = ref(storage, `moviePicture/${movieId}/${file.name}`);
+      await uploadBytes(fileRef, file);
+      const photoUrl = await getDownloadURL(fileRef);
+
+      await updateDoc(movieRef, {
+        photoUrl,
+      });
+    }
+
     setLoading(false);
     navigate(`/movie/${movieId}`);
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+
+    // Seçilen dosyanın uzantısını al
+    const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+
+    // Uzantıyı kontrol et
+    if (
+      fileExtension === "png" ||
+      fileExtension === "jpg" ||
+      fileExtension === "jpeg"
+    ) {
+      // Uzantı PNG veya JPG ise dosyayı setFile ile ayarla
+      setFile(selectedFile);
+    } else {
+      // Diğer durumlarda kullanıcıya hata mesajı göster
+      alert("Lütfen sadece PNG veya JPG dosyaları yükleyin.");
+    }
   };
 
   return (
@@ -140,7 +171,7 @@ function EditeMovieModal() {
           <input
             type="file"
             accept=".png,.jpg,.jpeg"
-            // onChange={handleFileChange}
+            onChange={handleFileChange}
             className="mt-5"
           />
           <br />
