@@ -187,7 +187,7 @@ export default function EditeSeriesModal() {
             </div>
             <div className="control">
               <button
-                onClick={() => navigate(`/movie/${seriesId}`)}
+                onClick={() => navigate(`/series/${seriesId}`)}
                 className="button is-link is-danger"
               >
                 İptal
