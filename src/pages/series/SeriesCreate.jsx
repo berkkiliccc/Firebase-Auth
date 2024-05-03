@@ -1,8 +1,8 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { auth, db, storage } from "../../config/firebase";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getDownloadURL, listAll, ref } from "firebase/storage";
+import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 
 function CreateSeries() {
   const [title, setTitle] = useState("");
@@ -12,26 +12,43 @@ function CreateSeries() {
   const [photoUrl, setPhotoUrl] = useState(
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCIMGFCxokq8Vhi27FmgyPQOqSuolbXVQDNA&s"
   );
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const seriesCollectionRef = collection(db, "Series");
 
   const navigate = useNavigate();
 
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+
+    // Seçilen dosyanın uzantısını al
+    const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+
+    // Uzantıyı kontrol et
+    if (
+      fileExtension === "png" ||
+      fileExtension === "jpg" ||
+      fileExtension === "jpeg"
+    ) {
+      // Uzantı PNG veya JPG ise dosyayı setFile ile ayarla
+      setFile(selectedFile);
+    } else {
+      // Diğer durumlarda kullanıcıya hata mesajı göster
+      alert("Lütfen sadece PNG veya JPG dosyaları yükleyin.");
+    }
+  };
   const addSeries = async () => {
     try {
+      setLoading(true);
       const userUid = auth.currentUser.uid;
-      // Kullanıcının profil fotoğrafının referansını oluştur
       const profilePictureRef = ref(storage, `profilePicture/${userUid}`);
-      // Dizindeki dosyaları listele
       const listResult = await listAll(profilePictureRef);
-      // İlk dosyanın adını al (dizin sadece bir dosya içerdiğinden emin olduğumuz için)
       const fileName = listResult.items[0].name;
-      // Fotoğrafın referansını oluştur
       const photoRef = ref(storage, `profilePicture/${userUid}/${fileName}`);
-      // Fotoğrafın URL'sini al
       const profilePhotoUrl = await getDownloadURL(photoRef);
 
-      await addDoc(seriesCollectionRef, {
+      const seriesData = {
         title: title,
         topic: topic,
         createdAt: new Date().toLocaleDateString("tr-TR", {
@@ -45,12 +62,31 @@ function CreateSeries() {
         createdBy: auth.currentUser.displayName,
         userPhotoUrl: profilePhotoUrl,
         type: platform,
-      });
+      };
+
+      // Yeni bir dizi belgesi oluştur
+      const seriesDocRef = await addDoc(seriesCollectionRef, seriesData);
+      const seriesId = seriesDocRef.id; // Dizinin kimlik bilgisini al
+
+      if (file) {
+        // Dosyayı diziye yükle
+        const fileRef = ref(storage, `seriesPicture/${seriesId}/${file.name}`);
+        await uploadBytes(fileRef, file);
+        const photoUrl = await getDownloadURL(fileRef);
+
+        // Dosyanın URL'sini dizi belgesine kaydet
+        await updateDoc(seriesDocRef, {
+          photoUrl,
+        });
+      }
+
+      setLoading(false);
       navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
     <div className="hero is-fullheight   ">
       <div className=" columns hero-body d-flex is-align-items-center is-justify-content-center text-center ">
@@ -115,11 +151,21 @@ function CreateSeries() {
               />
             </div>
           </div>
+          <input
+            type="file"
+            accept=".png,.jpg,.jpeg"
+            onChange={handleFileChange}
+            className="mt-5 "
+          />
+          <br />
 
           <div className="field is-grouped d-flex justify-content-center align-items-center hero-body ">
             <div className="control">
-              <button className="button is-link" onClick={addSeries}>
-                Submit
+              <button
+                className={`button is-link ${loading ? "is-loading" : ""}`}
+                onClick={addSeries}
+              >
+                Kaydet
               </button>
             </div>
             <div className="control">
@@ -127,7 +173,7 @@ function CreateSeries() {
                 onClick={() => navigate("/series")}
                 className="button is-link is-danger"
               >
-                Cancel
+                İptal
               </button>
             </div>
           </div>

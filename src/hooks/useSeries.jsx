@@ -5,8 +5,9 @@ import {
   getDoc,
   getDocs,
 } from "firebase/firestore";
-import { db } from "../config/firebase";
+import { db, storage } from "../config/firebase";
 import { useState } from "react";
+import { deleteObject, listAll, ref } from "firebase/storage";
 
 export default function useSeries() {
   const [seriesList, setSeriesList] = useState([]);
@@ -47,7 +48,20 @@ export default function useSeries() {
   const handleDelete = async (id) => {
     try {
       const seriesDoc = doc(seriesCollectionRef, id);
+      const directoryRef = ref(storage, `/seriesPicture/${id}`);
+
+      // Tüm dosyaları listele
+      const listResult = await listAll(directoryRef);
+
+      // Her dosyayı tek tek sil
+      await Promise.all(
+        listResult.items.map(async (item) => {
+          await deleteObject(item);
+        })
+      );
+
       await deleteDoc(seriesDoc);
+
       setSeriesList((prev) => prev.filter((series) => series.id !== id));
       console.log("Document successfully deleted!");
     } catch (error) {

@@ -6,7 +6,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import {
   collection,
@@ -153,6 +153,16 @@ function Settings() {
     }
   };
 
+  const handleVerifyEmail = async () => {
+    try {
+      await sendEmailVerification(auth.currentUser);
+      console.log("Verification Email Sent");
+      alert("Email onay maili gönderildi. Lutfen kontrol edin.");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   if (!currentUser) {
     return <div>Loading...</div>;
   }
@@ -215,22 +225,6 @@ function Settings() {
                     </p>
                   </div>
                 </div>
-                {/* <div className="field">
-                  <label className="label has-text-black text-center">
-                    Cinsiyet
-                  </label>
-                  <div className="select is-link is-rounded is-hovered">
-                    <select className="has-background-white" disabled>
-                      <option value="" className="has-text-black"></option>
-                      <option value="Erkek" className="has-text-black">
-                        Erkek
-                      </option>
-                      <option value="Kadın" className="has-text-black">
-                        Kadın
-                      </option>
-                    </select>
-                  </div>
-                </div> */}
 
                 <div className="field">
                   <label className="label has-text-black text-center">
@@ -252,6 +246,31 @@ function Settings() {
                   <div className="control">
                     <p className="input is-link is-rounded is-hovered has-background-white has-text-black">
                       {auth?.currentUser?.phoneNumber}
+                    </p>
+                  </div>
+                </div>
+                <div className="field">
+                  <label className="label has-text-black text-center">
+                    Email onay
+                  </label>
+                  <div className="control">
+                    <p className="input is-link is-rounded is-hovered has-background-white has-text-black">
+                      {auth.currentUser.emailVerified
+                        ? "Onaylandı"
+                        : "Onaylanmadı"}
+                    </p>
+                    <p className="help has-text-black text-center">
+                      {" "}
+                      {auth.currentUser.emailVerified ? (
+                        false
+                      ) : (
+                        <button
+                          className="button is-danger is-small is-rounded"
+                          onClick={() => handleVerifyEmail()}
+                        >
+                          Emaili Onayla
+                        </button>
+                      )}
                     </p>
                   </div>
                 </div>

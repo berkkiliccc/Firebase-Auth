@@ -19,6 +19,7 @@ import Home from "./pages";
 import Profile from "./pages/profile/Profile";
 import EditeSeriesModal from "./pages/EditeModal/EditeSeriesModal";
 import EditeMovieModal from "./pages/EditeModal/EditeMovieModal";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -63,7 +64,11 @@ function App() {
         <Route
           path="/addmovie"
           element={
-            currentUser !== null ? <CreateMovie /> : <Navigate to="/login" />
+            currentUser !== null && auth.currentUser.emailVerified !== false ? (
+              <CreateMovie />
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
         <Route path={`/movie/:movieId`} element={<Movie />} />
@@ -83,11 +88,21 @@ function App() {
         <Route
           path="/addseries"
           element={
-            currentUser !== null ? <CreateSeries /> : <Navigate to="/login" />
+            currentUser !== null && auth.currentUser.emailVerified !== false ? (
+              <CreateSeries />
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
         <Route path={`/series/:seriesId`} element={<Series />} />
         <Route path={`/series/:seriesId/edit`} element={<EditeSeriesModal />} />
+        <Route
+          path={`/resetpassword`}
+          element={
+            currentUser === null ? <ResetPassword /> : <Navigate to="/" />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

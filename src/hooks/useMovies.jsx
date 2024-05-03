@@ -5,8 +5,9 @@ import {
   getDoc,
   getDocs,
 } from "firebase/firestore";
-import { db } from "../config/firebase";
+import { db, storage } from "../config/firebase";
 import { useState } from "react";
+import { deleteObject, listAll, ref } from "firebase/storage";
 
 export default function useMovies() {
   const [movieList, setMovieList] = useState([]);
@@ -49,6 +50,18 @@ export default function useMovies() {
     try {
       const colRef = collection(db, "Movies");
       const movieDoc = doc(colRef, id);
+      const directoryRef = ref(storage, `/moviePicture/${id}`);
+
+      // Tüm dosyaları listele
+      const listResult = await listAll(directoryRef);
+
+      // Her dosyayı tek tek sil
+      await Promise.all(
+        listResult.items.map(async (item) => {
+          await deleteObject(item);
+        })
+      );
+
       await deleteDoc(movieDoc);
       setMovieList((prev) => prev.filter((movie) => movie.id !== id));
       console.log("Document successfully deleted!");

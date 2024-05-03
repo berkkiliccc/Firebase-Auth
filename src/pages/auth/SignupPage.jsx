@@ -1,4 +1,8 @@
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
 import { auth, db, storage } from "../../config/firebase";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -54,11 +58,21 @@ function SignupPage() {
         displayName: `${firstName} ${lastName}`,
         profilePicture: profilePictureURL,
       });
+      handleVerifyEmail();
 
       // Giriş sayfasına yönlendir
       navigate("/login");
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleVerifyEmail = async () => {
+    try {
+      await sendEmailVerification(auth.currentUser);
+      console.log("Verification Email Sent");
+    } catch (e) {
+      console.error(e);
     }
   };
 

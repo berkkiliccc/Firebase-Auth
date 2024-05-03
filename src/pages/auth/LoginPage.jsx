@@ -62,7 +62,7 @@ function LoginPage() {
     <div className="container  ">
       <div className="row  d-flex justify-content-center align-items-center vh-100  ">
         <div className="col-md-6 ">
-          <h1 className="text-center">Login</h1>
+          <h1 className="text-center">Giriş Yap</h1>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -91,7 +91,7 @@ function LoginPage() {
               </label>
               <input
                 type="password"
-                id="password"
+                id="inputPassword"
                 className="form-control"
                 placeholder="Şifre"
                 required
@@ -108,6 +108,11 @@ function LoginPage() {
                 Giriş Yap
               </button>
             </div>
+            <p className="text-center mt-3">
+              <Link to="/resetpassword" style={{ textDecoration: "none" }}>
+                <span className="fs-5 has-text-link">Şifremi Unuttum</span>
+              </Link>
+            </p>
             <p className="text-center mt-3">
               Hesabın yok mu?
               <Link to="/signup" style={{ textDecoration: "none" }}>

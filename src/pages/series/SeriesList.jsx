@@ -18,7 +18,7 @@ function SeriesList() {
           {seriesList.map((series) => (
             <div
               key={series.id}
-              className="column is-justify-content-center is-one-third  "
+              className="column is-justify-content-center is-one-third text-center "
             >
               <MovieCard {...series} handleDelete={handleDelete} />
             </div>

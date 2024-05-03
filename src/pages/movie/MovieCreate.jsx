@@ -1,7 +1,8 @@
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../../config/firebase";
+import { addDoc, collection, updateDoc } from "firebase/firestore";
+import { auth, db, storage } from "../../config/firebase";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 
 function CreateMovie() {
   const [title, setTitle] = useState("");
@@ -11,17 +12,43 @@ function CreateMovie() {
   const [photoUrl, setPhotoUrl] = useState(
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCIMGFCxokq8Vhi27FmgyPQOqSuolbXVQDNA&s"
   );
+  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
 
   const moviesCollectionRef = collection(db, "Movies");
 
   const navigate = useNavigate();
 
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+
+    // Seçilen dosyanın uzantısını al
+    const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+
+    // Uzantıyı kontrol et
+    if (
+      fileExtension === "png" ||
+      fileExtension === "jpg" ||
+      fileExtension === "jpeg"
+    ) {
+      // Uzantı PNG veya JPG ise dosyayı setFile ile ayarla
+      setFile(selectedFile);
+    } else {
+      // Diğer durumlarda kullanıcıya hata mesajı göster
+      alert("Lütfen sadece PNG veya JPG dosyaları yükleyin.");
+    }
+  };
   const addMovie = async () => {
-    const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
-    const userData = userDoc.data();
-    const res = userData.profilePicture;
     try {
-      await addDoc(moviesCollectionRef, {
+      setLoading(true);
+      const userUid = auth.currentUser.uid;
+      const profilePictureRef = ref(storage, `profilePicture/${userUid}`);
+      const listResult = await listAll(profilePictureRef);
+      const fileName = listResult.items[0].name;
+      const photoRef = ref(storage, `profilePicture/${userUid}/${fileName}`);
+      const profilePhotoUrl = await getDownloadURL(photoRef);
+
+      const movieData = {
         title: title,
         topic: topic,
         createdAt: new Date().toLocaleDateString("tr-TR", {
@@ -33,14 +60,58 @@ function CreateMovie() {
         photoUrl: photoUrl,
         userId: auth.currentUser.uid,
         createdBy: auth.currentUser.displayName,
-        userPhotoUrl: res,
+        userPhotoUrl: profilePhotoUrl,
         type: platform,
-      });
+      };
+
+      // Yeni bir dizi belgesi oluştur
+      const movieDocRef = await addDoc(moviesCollectionRef, movieData);
+      const movieId = movieDocRef.id; // Dizinin kimlik bilgisini al
+
+      if (file) {
+        // Dosyayı diziye yükle
+        const fileRef = ref(storage, `moviePicture/${movieId}/${file.name}`);
+        await uploadBytes(fileRef, file);
+        const photoUrl = await getDownloadURL(fileRef);
+
+        // Dosyanın URL'sini dizi belgesine kaydet
+        await updateDoc(movieDocRef, {
+          photoUrl,
+        });
+      }
+
+      setLoading(false);
       navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
+
+  // const addMovie = async () => {
+  //   const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+  //   const userData = userDoc.data();
+  //   const res = userData.profilePicture;
+  //   try {
+  //     await addDoc(moviesCollectionRef, {
+  //       title: title,
+  //       topic: topic,
+  //       createdAt: new Date().toLocaleDateString("tr-TR", {
+  //         year: "numeric",
+  //         month: "long",
+  //         day: "numeric",
+  //       }),
+  //       year: year,
+  //       photoUrl: photoUrl,
+  //       userId: auth.currentUser.uid,
+  //       createdBy: auth.currentUser.displayName,
+  //       userPhotoUrl: res,
+  //       type: platform,
+  //     });
+  //     navigate("/");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="hero is-fullheight   ">
@@ -106,11 +177,21 @@ function CreateMovie() {
               />
             </div>
           </div>
+          <input
+            type="file"
+            accept=".png,.jpg,.jpeg"
+            onChange={handleFileChange}
+            className="mt-5 "
+          />
+          <br />
 
           <div className="field is-grouped d-flex justify-content-center align-items-center hero-body ">
             <div className="control">
-              <button className="button is-link" onClick={addMovie}>
-                Submit
+              <button
+                className={`button is-link ${loading ? "is-loading" : ""}`}
+                onClick={addMovie}
+              >
+                Kaydet
               </button>
             </div>
             <div className="control">
@@ -118,7 +199,7 @@ function CreateMovie() {
                 onClick={() => navigate("/movies")}
                 className="button is-link is-danger"
               >
-                Cancel
+                İptal
               </button>
             </div>
           </div>

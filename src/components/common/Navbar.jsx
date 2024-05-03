@@ -90,15 +90,17 @@ function Navbar() {
               >
                 Filmler
               </Link>
-              <Link
-                to="/addmovie"
-                className="navbar-item"
-                style={{
-                  textDecoration: "none",
-                }}
-              >
-                Film Ekle
-              </Link>
+              {currentUser.emailVerified && (
+                <Link
+                  to="/addmovie"
+                  className="navbar-item"
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  Film Ekle
+                </Link>
+              )}
               <Link
                 to="/diziler"
                 className="navbar-item"
@@ -108,15 +110,17 @@ function Navbar() {
               >
                 Diziler
               </Link>
-              <Link
-                to="/addseries"
-                className="navbar-item"
-                style={{
-                  textDecoration: "none",
-                }}
-              >
-                Dizi Ekle
-              </Link>
+              {currentUser.emailVerified && (
+                <Link
+                  to="/addseries"
+                  className="navbar-item"
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  Dizi Ekle
+                </Link>
+              )}
             </div>
           </div>
         )}
@@ -142,10 +146,11 @@ function Navbar() {
                       }}
                     />
                   </figure>
+                  <span className="ml-3">{currentUser.displayName}</span>
                 </span>
 
-                <div className="navbar-dropdown is-boxed">
-                  <div className="navbar-item">
+                <div className="navbar-dropdown is-boxed ">
+                  <div className="navbar-item  justify-content-center ">
                     <span
                       className="navbar-item has-background-grey-lighter has-text-dark"
                       to="/"
@@ -153,7 +158,7 @@ function Navbar() {
                       {currentUser.displayName}
                     </span>
                   </div>
-                  <div className="navbar-item">
+                  <div className="navbar-item justify-content-center">
                     <Link
                       className="navbar-item"
                       to={`/profile/${currentUser.uid}`}
@@ -161,7 +166,7 @@ function Navbar() {
                       Profil
                     </Link>
                   </div>
-                  <div className="navbar-item">
+                  <div className="navbar-item justify-content-center ">
                     <Link
                       className="navbar-item"
                       to={`/profile/${currentUser.uid}/settings`}
@@ -169,7 +174,7 @@ function Navbar() {
                       Ayarlar
                     </Link>
                   </div>
-                  <div className="navbar-item">
+                  <div className="navbar-item justify-content-center">
                     <Link to="/login">
                       <button
                         onClick={handleLogout}
