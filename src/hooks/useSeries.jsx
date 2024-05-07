@@ -12,11 +12,13 @@ import { deleteObject, listAll, ref } from "firebase/storage";
 export default function useSeries() {
   const [seriesList, setSeriesList] = useState([]);
   const [serie, setSerie] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const seriesCollectionRef = collection(db, "Series");
 
   const getSeriesList = async () => {
     try {
+      setIsLoading(true);
       const data = await getDocs(seriesCollectionRef);
       const filteredData = data.docs.map((doc) => ({
         id: doc.id,
@@ -28,11 +30,14 @@ export default function useSeries() {
       // console.log("MovieList =>", filteredData);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const getSerie = async (seriesId) => {
     try {
+      setIsLoading(true);
       const docRef = doc(seriesCollectionRef, seriesId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -42,6 +47,8 @@ export default function useSeries() {
       }
     } catch (error) {
       console.log("Error getting document:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,5 +82,6 @@ export default function useSeries() {
     handleDelete,
     serie,
     getSerie,
+    isLoading,
   };
 }

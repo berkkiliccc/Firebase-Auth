@@ -4,13 +4,20 @@ import MovieCard from "../../hooks/MovieCard";
 import useSeries from "../../hooks/useSeries";
 
 function SeriesList() {
-  const { seriesList, getSeriesList, handleDelete } = useSeries();
+  const { seriesList, getSeriesList, handleDelete, isLoading } = useSeries();
 
   useEffect(() => {
     getSeriesList();
     console.log("SeriesList component mounted");
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="d-flex text-center align-items-center justify-content-center vh-100 text-bold ">
+        Yukleniyor...
+      </div>
+    );
+  }
   return (
     <>
       <div className="hero is-fullheight">

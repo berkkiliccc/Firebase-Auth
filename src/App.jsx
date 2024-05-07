@@ -20,6 +20,7 @@ import Profile from "./pages/profile/Profile";
 import EditeSeriesModal from "./pages/EditeModal/EditeSeriesModal";
 import EditeMovieModal from "./pages/EditeModal/EditeMovieModal";
 import ResetPassword from "./pages/auth/ResetPassword";
+// import NavbarDeneme from "./components/common/NavbarDeneme";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -104,6 +105,7 @@ function App() {
           }
         />
       </Routes>
+      {/* <NavbarDeneme /> */}
     </BrowserRouter>
   );
 }

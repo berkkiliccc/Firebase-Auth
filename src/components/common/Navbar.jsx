@@ -27,7 +27,7 @@ function Navbar() {
   return (
     <nav className="navbar is-light  ">
       <div className="navbar-brand d-flex m-auto ">
-        <a className="navbar-item" href="/">
+        {/* <a className="navbar-item" href="/">
           <svg
             width={640}
             height={160}
@@ -49,7 +49,7 @@ function Navbar() {
               fill="#00D1B2"
             />
           </svg>
-        </a>
+        </a> */}
 
         <div
           role="button"
@@ -63,6 +63,96 @@ function Navbar() {
           <span />
           <span />
         </div>
+        {currentUser && (
+          <div className="navbar-start">
+            <div className="navbar-item">
+              {!burgerMenu && (
+                <Link
+                  to="/"
+                  className="navbar-item"
+                  onClick={() => {
+                    if (burgerMenu) {
+                      setBurgerMenu(false);
+                    }
+                  }}
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  Ana Sayfa
+                </Link>
+              )}
+
+              {!burgerMenu && (
+                <Link
+                  to="/movies"
+                  className="navbar-item"
+                  onClick={() => {
+                    if (burgerMenu) {
+                      setBurgerMenu(false);
+                    }
+                  }}
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  Filmler
+                </Link>
+              )}
+
+              {!burgerMenu && (
+                <Link
+                  to="/diziler"
+                  className="navbar-item"
+                  onClick={() => {
+                    if (burgerMenu) {
+                      setBurgerMenu(false);
+                    }
+                  }}
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  Diziler
+                </Link>
+              )}
+              {currentUser.emailVerified ||
+                (!burgerMenu && (
+                  <Link
+                    to="/addmovie"
+                    className="navbar-item"
+                    onClick={() => {
+                      if (burgerMenu) {
+                        setBurgerMenu(false);
+                      }
+                    }}
+                    style={{
+                      textDecoration: "none",
+                    }}
+                  >
+                    Film Ekle
+                  </Link>
+                ))}
+              {currentUser.emailVerified ||
+                (!burgerMenu && (
+                  <Link
+                    to="/addseries"
+                    className="navbar-item"
+                    onClick={() => {
+                      if (burgerMenu) {
+                        setBurgerMenu(false);
+                      }
+                    }}
+                    style={{
+                      textDecoration: "none",
+                    }}
+                  >
+                    Dizi Ekle
+                  </Link>
+                ))}
+            </div>
+          </div>
+        )}
       </div>
       <div
         id="navbar"
@@ -74,36 +164,37 @@ function Navbar() {
               <Link
                 to="/"
                 className="navbar-item"
+                onClick={() => setBurgerMenu(false)}
                 style={{
                   textDecoration: "none",
                 }}
               >
-                Home
+                Ana Sayfa
               </Link>
 
               <Link
                 to="/movies"
                 className="navbar-item"
+                onClick={() => {
+                  if (burgerMenu) {
+                    setBurgerMenu(false);
+                  }
+                }}
                 style={{
                   textDecoration: "none",
                 }}
               >
                 Filmler
               </Link>
-              {currentUser.emailVerified && (
-                <Link
-                  to="/addmovie"
-                  className="navbar-item"
-                  style={{
-                    textDecoration: "none",
-                  }}
-                >
-                  Film Ekle
-                </Link>
-              )}
+
               <Link
                 to="/diziler"
                 className="navbar-item"
+                onClick={() => {
+                  if (burgerMenu) {
+                    setBurgerMenu(false);
+                  }
+                }}
                 style={{
                   textDecoration: "none",
                 }}
@@ -112,8 +203,29 @@ function Navbar() {
               </Link>
               {currentUser.emailVerified && (
                 <Link
+                  to="/addmovie"
+                  className="navbar-item"
+                  onClick={() => {
+                    if (burgerMenu) {
+                      setBurgerMenu(false);
+                    }
+                  }}
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  Film Ekle
+                </Link>
+              )}
+              {currentUser.emailVerified && (
+                <Link
                   to="/addseries"
                   className="navbar-item"
+                  onClick={() => {
+                    if (burgerMenu) {
+                      setBurgerMenu(false);
+                    }
+                  }}
                   style={{
                     textDecoration: "none",
                   }}
@@ -162,6 +274,7 @@ function Navbar() {
                     <Link
                       className="navbar-item"
                       to={`/profile/${currentUser.uid}`}
+                      onClick={() => setBurgerMenu(false)}
                     >
                       Profil
                     </Link>
@@ -170,6 +283,7 @@ function Navbar() {
                     <Link
                       className="navbar-item"
                       to={`/profile/${currentUser.uid}/settings`}
+                      onClick={() => setBurgerMenu(false)}
                     >
                       Ayarlar
                     </Link>

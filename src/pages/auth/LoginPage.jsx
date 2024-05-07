@@ -14,6 +14,7 @@ import defaultProfilePicture from "../../assets/defaultpicture.png";
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -55,6 +56,27 @@ function LoginPage() {
       navigate("/");
     } catch (e) {
       console.error(e);
+      console.log(e.code);
+      handleError(e);
+    }
+  };
+
+  const handleError = (error) => {
+    switch (error.code) {
+      case "auth/invalid-email":
+        setErrorMessage("Geçersiz Email");
+        break;
+      case "auth/user-not-found":
+        setErrorMessage("Kullanıcı Bulunamadı");
+        break;
+      case "auth/wrong-password":
+        setErrorMessage("Yanlış Şifre");
+        break;
+      case "auth/invalid-credential":
+        setErrorMessage("Geçersiz Kimlik Bilgisi");
+        break;
+      default:
+        setErrorMessage("Bir hata oluştu");
     }
   };
 
@@ -63,7 +85,17 @@ function LoginPage() {
       <div className="row  d-flex justify-content-center align-items-center vh-100  ">
         <div className="col-md-6 ">
           <h1 className="text-center">Giriş Yap</h1>
+          {errorMessage && (
+            <div className="notification  is-danger is-light">
+              <button
+                className="delete"
+                onClick={() => setErrorMessage(null)}
+              />
+              {errorMessage}
+            </div>
+          )}
           <form
+            className={` `}
             onSubmit={(e) => {
               e.preventDefault();
               handleLogin();
@@ -102,12 +134,13 @@ function LoginPage() {
             </div>
             <div className="d-flex align-items-center justify-content-center ">
               <button
-                className="btn btn-lg btn-primary btn-block "
+                className={`btn btn-lg btn-primary btn-block `}
                 type="submit"
               >
                 Giriş Yap
               </button>
             </div>
+
             <p className="text-center mt-3">
               <Link to="/resetpassword" style={{ textDecoration: "none" }}>
                 <span className="fs-5 has-text-link">Şifremi Unuttum</span>

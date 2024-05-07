@@ -7,13 +7,21 @@ function Series() {
   const { seriesId } = useParams();
   const [deleting, setDeleting] = useState(false);
 
-  const { serie, getSerie, handleDelete } = useSeries();
+  const { serie, getSerie, handleDelete, isLoading } = useSeries();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     getSerie(seriesId);
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="d-flex text-center align-items-center justify-content-center vh-100 text-bold ">
+        Yukleniyor...
+      </div>
+    );
+  }
 
   const onClickDelete = async () => {
     try {

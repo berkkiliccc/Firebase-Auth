@@ -42,10 +42,16 @@ function CreateSeries() {
     try {
       setLoading(true);
       const userUid = auth.currentUser.uid;
-      const profilePictureRef = ref(storage, `profilePicture/${userUid}`);
+      const profilePictureRef = ref(
+        storage,
+        `profilePicture/${userUid}'-'${auth.currentUser.email}`
+      );
       const listResult = await listAll(profilePictureRef);
       const fileName = listResult.items[0].name;
-      const photoRef = ref(storage, `profilePicture/${userUid}/${fileName}`);
+      const photoRef = ref(
+        storage,
+        `profilePicture/${userUid}'-'${auth.currentUser.email}/${fileName}`
+      );
       const profilePhotoUrl = await getDownloadURL(photoRef);
 
       const seriesData = {
@@ -70,7 +76,10 @@ function CreateSeries() {
 
       if (file) {
         // Dosyayı diziye yükle
-        const fileRef = ref(storage, `seriesPicture/${seriesId}/${file.name}`);
+        const fileRef = ref(
+          storage,
+          `seriesPicture/${seriesId}'-'${auth.currentUser.email}/${file.name}`
+        );
         await uploadBytes(fileRef, file);
         const photoUrl = await getDownloadURL(fileRef);
 

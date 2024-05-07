@@ -1,6 +1,6 @@
 import {
   createUserWithEmailAndPassword,
-  sendEmailVerification,
+  // sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
 import { auth, db, storage } from "../../config/firebase";
@@ -37,7 +37,7 @@ function SignupPage() {
       // Profil resminin yükleneceği konumu belirle
       const profilePictureRef = ref(
         storage,
-        `profilePicture/${user.uid}/defaultpicture.png`
+        `profilePicture/${user.uid}'-'${user.email}/defaultpicture.png`
       );
 
       // Blob'u yükle
@@ -57,8 +57,14 @@ function SignupPage() {
         email: user.email,
         displayName: `${firstName} ${lastName}`,
         profilePicture: profilePictureURL,
+        emailVerified: user.emailVerified,
+        profileCreatedAt: new Date().toLocaleDateString("tr-TR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
       });
-      handleVerifyEmail();
+      // handleVerifyEmail();
 
       // Giriş sayfasına yönlendir
       navigate("/login");
@@ -67,14 +73,14 @@ function SignupPage() {
     }
   };
 
-  const handleVerifyEmail = async () => {
-    try {
-      await sendEmailVerification(auth.currentUser);
-      console.log("Verification Email Sent");
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  // const handleVerifyEmail = async () => {
+  //   try {
+  //     await sendEmailVerification(auth.currentUser);
+  //     console.log("Verification Email Sent");
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 
   return (
     <div className="container  ">

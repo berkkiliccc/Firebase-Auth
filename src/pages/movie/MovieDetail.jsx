@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import useMovies from "../../hooks/useMovies";
 
 function Movie() {
-  const { movie, getMovie, handleDelete } = useMovies();
+  const { movie, getMovie, handleDelete, isLoading } = useMovies();
   const [deleting, setDeleting] = useState(false);
 
   const { movieId } = useParams();
@@ -14,6 +14,14 @@ function Movie() {
   useEffect(() => {
     getMovie(movieId);
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="d-flex text-center align-items-center justify-content-center vh-100 text-bold ">
+        Yukleniyor...
+      </div>
+    );
+  }
 
   const onClickDelete = async () => {
     try {

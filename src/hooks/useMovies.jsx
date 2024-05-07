@@ -12,11 +12,13 @@ import { deleteObject, listAll, ref } from "firebase/storage";
 export default function useMovies() {
   const [movieList, setMovieList] = useState([]);
   const [movie, setMovie] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const moviesCollectionRef = collection(db, "Movies");
 
   const getMovieList = async () => {
     try {
+      setIsLoading(true);
       const moviesCollectionRef = collection(db, "Movies");
       const snap = await getDocs(moviesCollectionRef);
       const docs = snap.docs.map((doc) => ({
@@ -25,15 +27,16 @@ export default function useMovies() {
       }));
 
       setMovieList(docs);
-
-      // console.log("MovieList =>", filteredData);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const getMovie = async (movieId) => {
     try {
+      setIsLoading(true);
       const docRef = doc(moviesCollectionRef, movieId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -43,6 +46,8 @@ export default function useMovies() {
       }
     } catch (error) {
       console.log("Error getting document:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -76,5 +81,6 @@ export default function useMovies() {
     getMovie,
     movie,
     handleDelete,
+    isLoading,
   };
 }
