@@ -9,8 +9,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-import defaultProfilePicture from "../../assets/defaultpicture.png";
-
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,12 +22,14 @@ function LoginPage() {
       console.log("Google Login Success");
 
       const user = auth.currentUser;
-      const response = await fetch(defaultProfilePicture);
+      const photoURL = user.photoURL;
+      const response = await fetch(photoURL);
 
       const blob = await response.blob();
+      const fileName = "profilephoto.png";
       const profilePictureRef = ref(
         storage,
-        `profilePicture/${user.uid}/defaultpicture.png`
+        `profilePicture/${user.uid}'-'${auth.currentUser.email}/${fileName}`
       );
       await uploadBytes(profilePictureRef, blob);
       const profilePictureURL = await getDownloadURL(profilePictureRef);
@@ -52,7 +52,6 @@ function LoginPage() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      console.log("Login Success");
       navigate("/");
     } catch (e) {
       console.error(e);

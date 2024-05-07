@@ -8,7 +8,6 @@ function SeriesList() {
 
   useEffect(() => {
     getSeriesList();
-    console.log("SeriesList component mounted");
   }, []);
 
   if (isLoading) {

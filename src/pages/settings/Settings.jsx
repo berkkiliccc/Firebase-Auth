@@ -18,10 +18,8 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { set } from "firebase/database";
 
 function Settings() {
-  const [currentUser, setCurrentUser] = useState(auth.currentUser);
   const [file, setFile] = useState(null);
   const [pictureLoading, setPictureLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
@@ -43,8 +41,7 @@ function Settings() {
   }, []);
 
   const getUserDoc = async () => {
-    console.log(currentUser.uid);
-    const userRef = doc(db, `users/${currentUser.uid}`);
+    const userRef = doc(db, `users/${auth.currentUser.uid}`);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
       setDisplayName(docSnap.data().displayName);
@@ -58,9 +55,9 @@ function Settings() {
   const deletePicture = async () => {
     try {
       // Kullanıcının önceki fotoğrafı var mı kontrol et
-      if (currentUser.photoURL) {
+      if (auth.currentUser.photoURL) {
         // Önceki fotoğrafın referansını oluştur
-        const previousPhotoRef = ref(storage, currentUser.photoURL);
+        const previousPhotoRef = ref(storage, auth.currentUser.photoURL);
 
         // Önceki fotoğrafı sil
         await deleteObject(previousPhotoRef);
@@ -71,14 +68,19 @@ function Settings() {
   };
 
   const uploadFile = async () => {
-    if (file === null || !currentUser || currentUser.photoURL === null) return;
+    if (
+      file === null ||
+      !auth.currentUser ||
+      auth.currentUser.photoURL === null
+    )
+      return;
 
     try {
       deletePicture();
       setPictureLoading(true);
       const filesFolderRef = ref(
         storage,
-        `profilePicture/${currentUser.uid}'-'${currentUser.email}/${file.name}`
+        `profilePicture/${auth.currentUser.uid}'-'${auth.currentUser.email}/${file.name}`
       );
       await uploadBytes(filesFolderRef, file);
       const url = await getDownloadURL(filesFolderRef);
@@ -88,19 +90,19 @@ function Settings() {
       });
 
       // Kullanıcının fotoğraf URL'si güncellendiğinde Movies koleksiyonundaki belgeleri güncelle
-      await updateMoviesPhotoUrl(currentUser.uid, url);
+      await updateMoviesPhotoUrl(auth.currentUser.uid, url);
 
       // Kullanıcının fotoğraf URL'si güncellendiğinde Users koleksiyonundaki belgeleri güncelle
-      await updateUserPhotoUrlDoc(currentUser.uid, url);
+      await updateUserPhotoUrlDoc(auth.currentUser.uid, url);
 
       // Kullanıcının fotoğraf URL'si güncellendiğinde Series koleksiyonundaki belgeleri güncelle
-      await updateSeriesPhotoUrl(currentUser.uid, url);
+      await updateSeriesPhotoUrl(auth.currentUser.uid, url);
 
       setPictureLoading(false);
       setFile(null);
       setPreviewImage(null);
       fileInputRef.current.value = null;
-      navigate(`/profile/${currentUser.uid}/settings`);
+      navigate(`/profile/${auth.currentUser.uid}/settings`);
     } catch (e) {
       console.log(e);
     }
@@ -214,14 +216,14 @@ function Settings() {
       });
 
       await updateUserDoc({
-        userId: currentUser.uid,
+        userId: auth.currentUser.uid,
         displayName,
         phoneNumber,
         gender,
       });
 
-      await updateMoviesDisplayName(currentUser.uid, displayName);
-      await updateSeriesDisplayName(currentUser.uid, displayName);
+      await updateMoviesDisplayName(auth.currentUser.uid, displayName);
+      await updateSeriesDisplayName(auth.currentUser.uid, displayName);
       console.log("User information updated");
       setLoading(false);
       setIsSuccessUpdateProfile(true);
@@ -283,7 +285,7 @@ function Settings() {
     }
   };
 
-  if (!currentUser) {
+  if (!auth.currentUser) {
     return <div>Loading...</div>;
   }
 
@@ -408,11 +410,12 @@ function Settings() {
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
-                {phoneNumber === null && (
-                  <p className="help is-success">
-                    Başında `0` olmadan yazmanız gereklidir.
-                  </p>
-                )}
+                {phoneNumber === null ||
+                  (phoneNumber === "" && (
+                    <p className="help is-success">
+                      Başında `0` olmadan yazmanız gereklidir.
+                    </p>
+                  ))}
               </div>
               <div className="field">
                 <label className="label has-text-black ">Email onay</label>

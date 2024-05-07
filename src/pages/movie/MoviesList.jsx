@@ -7,7 +7,6 @@ function MovieList() {
 
   useEffect(() => {
     getMovieList();
-    console.log("MovieList component mounted");
   }, []);
 
   if (isLoading) {
