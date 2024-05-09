@@ -38,7 +38,7 @@ function Movie() {
 
   return (
     <>
-      <div className="hero is-fullheight is-full d-flex is-align-items-center is-justify-content-center text-center mt-6">
+      <div className="hero is-fullheight is-full d-flex is-align-items-center is-justify-content-center text-center">
         <div className="columns">
           {auth.currentUser ? (
             <div className="column">

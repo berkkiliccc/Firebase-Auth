@@ -20,6 +20,7 @@ import Profile from "./pages/profile/Profile";
 import EditeSeriesModal from "./pages/EditeModal/EditeSeriesModal";
 import EditeMovieModal from "./pages/EditeModal/EditeMovieModal";
 import ResetPassword from "./pages/auth/ResetPassword";
+import Menu from "./components/common/Menu";
 // import NavbarDeneme from "./components/common/NavbarDeneme";
 
 function App() {
@@ -42,7 +43,9 @@ function App() {
   }
   return (
     <BrowserRouter>
-      <Navbar />
+      {/* <Navbar /> */}
+      {auth.currentUser && <Menu />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route

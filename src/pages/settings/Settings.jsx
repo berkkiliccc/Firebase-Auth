@@ -227,8 +227,6 @@ function Settings() {
       console.log("User information updated");
       setLoading(false);
       setIsSuccessUpdateProfile(true);
-
-      console.log(gender, phoneNumber, displayName);
     } catch (e) {
       console.error(e);
     }
