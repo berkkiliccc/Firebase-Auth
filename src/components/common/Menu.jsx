@@ -2,19 +2,89 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../config/firebase";
 import { signOut } from "firebase/auth";
 
+import oneriImg from "../../assets/onerilogo.png";
+import { useEffect, useState } from "react";
+
 function Menu() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1216);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const navigate = useNavigate();
   const handleLogout = () => {
     signOut(auth);
     navigate("/login");
   };
 
+  const dateTime = () => {
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+
+    return `${day < 10 ? `0${day + 1}` : `${day}`}/${
+      month < 10 ? `0${month + 1}` : `${month}`
+    }/${year}`;
+  };
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setIsMobile(window.innerWidth < 1216);
+    };
+
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const htmlElement = document.querySelector("html");
+    if (isMobile) {
+      htmlElement.classList.add("has-navbar-fixed-bottom");
+    } else {
+      htmlElement.classList.remove("has-navbar-fixed-bottom");
+    }
+  }, [isMobile]);
+
+  const handleSearch = async () => {
+    try {
+      const query = searchQuery; // Aramak istediğiniz kelime
+      const apiKey = ""; // API anahtarınız
+      const accessToken = "";
+
+      const url = `https://api.themoviedb.org/3/search/multi?query=${query}&api_key=7388ab269d1f10d165499e910add8e4c`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("HTTP error, status = " + response.status);
+      }
+
+      const data = await response.json();
+      console.log("Search Results:", data);
+      // Burada API'den gelen verileri kullanabilirsiniz.
+    } catch (error) {
+      console.error("Error searching:", error);
+    }
+  };
+
   return (
     <>
-      <div>
+      <div className="is-hidden-mobile is-hidden-tablet-only  ">
         <aside
-          className="menu mt-5 is-hidden-touch is-hidden-tablet-only"
-          style={{ float: "left", border: "1px solid black" }}
+          className="menu p-3"
+          style={{
+            float: "left",
+            height: "100%",
+            borderRight: "1px solid #a3a0a0",
+          }}
         >
           <div className="menu-label">
             <div className="menu-list">
@@ -23,22 +93,27 @@ function Menu() {
                   <div className="media-left">
                     <figure className="image is-64x64">
                       <img
-                        src={auth?.currentUser?.photoURL}
+                        src={oneriImg}
                         alt="Image"
                         style={{
                           width: "64px",
                           height: "64px",
                           objectPosition: "center",
                           objectFit: "cover",
+                          borderRadius: "10%",
                         }}
                       />
                     </figure>
                   </div>
+
                   <div className="media-content">
                     <div className="content">
-                      <h1 className="title has-text-black text-center">
-                        ONERI
-                      </h1>
+                      <h3 className="title has-text-black text-center">
+                        Öneri
+                      </h3>
+                      <h5 className="has-text-black-light text-center">
+                        {dateTime()}
+                      </h5>
                     </div>
                   </div>
                 </article>
@@ -47,11 +122,11 @@ function Menu() {
           </div>
 
           <p className="menu-label"></p>
-          <ul className="menu-list has-background-white	 ">
+          <ul className="menu-list has-background-white">
             <li>
               <Link
                 to="/"
-                className="navbar-item has-text-black title"
+                className="navbar-item has-text-black  "
                 style={{
                   textDecoration: "none",
                   border: "1px solid #a3a0a0",
@@ -59,11 +134,15 @@ function Menu() {
                   borderRadius: "10px",
                 }}
               >
-                Ana Sayfa
+                <span className="icon-text">
+                  <span className="icon ml-3">
+                    <i className="fas fa-home " />
+                  </span>
+                  <span className="ml-2">Ana Sayfa</span>
+                </span>
               </Link>
             </li>
           </ul>
-          <p className="menu-label ml-3">Film</p>
           <ul className="menu-list">
             <li
               style={{
@@ -80,7 +159,12 @@ function Menu() {
                   textDecoration: "none ",
                 }}
               >
-                Filmler
+                <span className="icon-text">
+                  <span className="icon">
+                    <i className="fa-solid fa-film" />
+                  </span>
+                  <span className="ml-2">Filmler</span>
+                </span>
               </Link>
               <hr />
               <Link
@@ -90,11 +174,16 @@ function Menu() {
                   textDecoration: "none",
                 }}
               >
-                Film Ekle
+                <span className="icon-text">
+                  <span className="icon">
+                    <i className="fa-solid fa-plus" />
+                  </span>
+                  <span className="ml-2">Film Ekle</span>
+                </span>
               </Link>
             </li>
           </ul>
-          <p className="menu-label ml-3">Dizi</p>
+
           <ul className="menu-list">
             <li
               style={{
@@ -111,7 +200,12 @@ function Menu() {
                   textDecoration: "none",
                 }}
               >
-                Diziler
+                <span className="icon-text">
+                  <span className="icon">
+                    <i className="fa-solid fa-tv" />
+                  </span>
+                  <span className="ml-2">Diziler</span>
+                </span>
               </Link>
               <hr />
               <Link
@@ -121,15 +215,46 @@ function Menu() {
                   textDecoration: "none",
                 }}
               >
-                Dizi Ekle
+                <span className="icon-text">
+                  <span className="icon">
+                    <i className="fa-solid fa-plus" />
+                  </span>
+                  <span className="ml-2">Dizi Ekle</span>
+                </span>
               </Link>
             </li>
           </ul>
+          <ul className="menu-list ">
+            <li
+              style={{
+                textDecoration: "none",
+                border: "1px solid #a3a0a0",
+                padding: "10px",
+                borderRadius: "10px",
+              }}
+            >
+              <div className="field has-addons has-background-white theme-light">
+                <p className="control">
+                  <input
+                    className="input "
+                    type="text"
+                    placeholder="Find a post"
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </p>
+                <p className="control">
+                  <button className="button " onClick={handleSearch}>
+                    Ara
+                  </button>
+                </p>
+              </div>
+            </li>
+          </ul>
 
-          <div className="menu-label d-flex ">
+          <div className="menu-label d-flex">
             <div className="menu-list">
-              <div className="box has-background-white">
-                <article className="media">
+              <div className="box has-background-white card">
+                <article className="media is-align-items-center ">
                   <div className="media-left">
                     <figure className="image is-64x64">
                       <img
@@ -140,22 +265,73 @@ function Menu() {
                           height: "64px",
                           objectPosition: "center",
                           objectFit: "cover",
-                          borderRadius: "20%",
+                          borderRadius: "10%",
                         }}
                       />
                     </figure>
                   </div>
-                  <div className="media-content ">
-                    <div className="content ">
-                      <h3 className="has-text-black text-center ">
-                        {auth?.currentUser?.displayName}
-                      </h3>
-                      <button
-                        className="button is-danger is-dark has-background-danger has-text-black has-text-weight-bold text-center"
-                        onClick={handleLogout}
+                  <div className="media-content  ">
+                    <div className="content  ">
+                      <Link
+                        to={`/profile/${auth?.currentUser?.uid}`}
+                        className="navbar-item has-text-black text-center has-text-link"
+                        style={{
+                          textDecoration: "none",
+                        }}
                       >
-                        Çıkış Yap
-                      </button>
+                        {auth?.currentUser?.displayName}
+                      </Link>
+                      <div className="text-center d-flex is-align-items-center is-justify-content-space-around">
+                        <Link
+                          to={`/profile/${auth?.currentUser?.uid}`}
+                          className="navbar-item has-text-black "
+                          style={{
+                            textDecoration: "none",
+                            flex: "1",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span className="icon is-small">
+                            <i className="fa-regular fa-user"></i>
+                          </span>
+                          <span style={{ fontSize: "10px" }}>Profil</span>
+                        </Link>
+                        <Link
+                          to={`/profile/${auth?.currentUser?.uid}/settings`}
+                          className="navbar-item has-text-black"
+                          style={{
+                            textDecoration: "none",
+                            flex: "1",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span className="icon is-small">
+                            <i className="fa-solid fa-cog"></i>
+                          </span>
+                          <span style={{ fontSize: "10px" }}>Ayarlar</span>
+                        </Link>
+                        <Link
+                          to="/login"
+                          className="navbar-item has-text-danger"
+                          style={{
+                            textDecoration: "none",
+                            flex: "1",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                          }}
+                          onClick={handleLogout}
+                        >
+                          <span className="icon is-small has-text-danger">
+                            <i className="fa-solid fa-sign-out"></i>
+                          </span>
+                          <span style={{ fontSize: "10px" }}>Çıkış</span>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </article>
@@ -164,14 +340,26 @@ function Menu() {
           </div>
         </aside>
       </div>
-      <div className="is-hidden-desktop">
+
+      <div
+        className="is-hidden-widescreen is-flex-tablet-only  "
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          flexWrap: "wrap",
+        }}
+      >
         <nav
-          className="navbar is-transparent is-expanded is-fixed-bottom  d-flex is-justify-content-space-around  p-0 "
+          className="navbar  is-transparent is-light is-fixed-bottom p-0"
           role="navigation"
         >
           <div
-            className="text-center d-flex is-align-items-center is-justify-content-space-around"
-            style={{ width: "100%" }}
+            className=""
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "100%",
+            }}
           >
             <Link
               to="/"
@@ -233,7 +421,7 @@ function Menu() {
               }}
             >
               <span className="icon">
-                <i className="fa-solid fa-user"></i>
+                <i className="fa-regular fa-user"></i>
               </span>
               <span style={{ fontSize: "12px" }}>Profil</span>
             </Link>

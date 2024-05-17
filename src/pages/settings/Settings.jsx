@@ -296,24 +296,23 @@ function Settings() {
           {previewImage && (
             <img
               src={previewImage}
-              className="is-rounded"
               alt="Preview"
               style={{
                 width: "256px",
                 height: "256px",
-                border: "1px solid black",
+                borderRadius: "10%",
               }}
             />
           )}
           {!previewImage && (
             <img
-              className="is-rounded "
+              className=" "
               src={auth.currentUser.photoURL}
               alt="user"
               style={{
                 width: "256px",
                 height: "256px",
-                border: "1px solid black",
+                borderRadius: "10%",
               }}
             />
           )}

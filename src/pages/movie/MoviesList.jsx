@@ -11,7 +11,7 @@ function MovieList() {
 
   if (isLoading) {
     return (
-      <div className="d-flex text-center align-items-center justify-content-center vh-100 text-bold ">
+      <div className=" hero is-fullheight d-flex text-center align-items-center justify-content-center  text-bold ">
         Yukleniyor...
       </div>
     );
@@ -20,12 +20,9 @@ function MovieList() {
   return (
     <>
       <div className="hero is-fullheight">
-        <div className="columns is-multiline m-4 ">
+        <div className="columns is-multiline mt-2 mb-2">
           {movieList.map((movie) => (
-            <div
-              key={movie.id}
-              className="column is-justify-content-center is-one-third text-center "
-            >
+            <div key={movie.id} className="column is-half  ">
               <MovieCard {...movie} handleDelete={handleDelete} />
             </div>
           ))}

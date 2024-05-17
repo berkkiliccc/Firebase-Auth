@@ -1,0 +1,56 @@
+
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Kartın tam boyutu kaplamasını sağlar */
+    padding: 10px; /* Kenar boşlukları */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Gölge efekti */
+    border-radius: 10px; /* Kenar yumuşatma */
+    
+  }
+  
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* İçeriği dikey olarak ortala */
+    align-items: center; /* İçeriği yatay olarak ortala */
+    text-align: center; /* Metni ortala */
+    flex-grow: 1; /* İçerik alanının kartın geri kalan boş alanını doldurmasını sağlar */
+  }
+  
+  .card-footer {
+    margin-top: auto; /* Alttaki boşluğu doldurur */
+  }
+  
+  /* Tüm kartları sarmalayan konteynerin stilini ayarla */
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+   
+  }
+  
+  /* Her bir kartın stilini ayarla */
+  .card {
+    flex: 1; /* Tüm kartlar eşit genişlikte olacak */
+    margin: 10px; /* Kartlar arası boşluk */
+    
+  }
+  
+  .img {
+    padding: 50px;
+    transition: transform .3s;
+    margin: 0 auto;
+  }
+  
+  .img:hover
+   {
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Safari 3-8 */
+    /* transform: scale(1.5) ; 
+     */
+     -webkit-transform: rotateX(20deg);
+    transform: rotateX(20deg);
+    box-shadow: 0 20px 20px rgba(50,50,50,.2);
+  }
+
+

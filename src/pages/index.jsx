@@ -12,7 +12,7 @@ function Home() {
       <div className="hero is-fullheight">
         <div className="hero-body  d-flex is-align-items-center is-justify-content-center text-center">
           <div className="container  ">
-            <div className="row  ">
+            <div className="row ">
               <div className="col-md-12 text-center ">
                 <h1 className="">Kurallar</h1>
                 <p className="text-center">
@@ -60,25 +60,22 @@ function Home() {
   }
 
   return (
-    <div className="hero is-fullheight">
-      <div className="hero-body  d-flex is-align-items-center is-justify-content-center text-center">
-        <div className="container py-6">
+    <div className="hero is-fullheight is-full theme-light">
+      <div className="hero-body d-flex is-align-items-center is-justify-content-center text-center">
+        <div className="container">
           <div className="row">
             <div className="col-md-12 text-center ">
-              <div>
-                <hr />
-
-                <h1 className="text-center subtitle">Filmler</h1>
-                <hr />
-                {currentUser.emailVerified && (
-                  <button className="btn btn-primary">
-                    <Link to="/addmovie" className="text-white">
-                      Film Ekle
-                    </Link>
-                  </button>
-                )}
-                <MoviesList />
-              </div>
+              <hr />
+              <h1 className="text-center subtitle">Filmler</h1>
+              <hr />
+              {currentUser.emailVerified && (
+                <button className="btn btn-primary">
+                  <Link to="/addmovie" className="text-white">
+                    Film Ekle
+                  </Link>
+                </button>
+              )}
+              <MoviesList />
 
               <hr />
               <h1 className="text-center subtitle">Diziler</h1>

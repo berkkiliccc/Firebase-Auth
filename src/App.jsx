@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { auth } from "./config/firebase";
 
-import { MoviesList, Navbar } from "./components";
+import { MoviesList } from "./components";
 
 import Series from "./pages/series/SeriesDetail";
 import CreateSeries from "./pages/series/SeriesCreate";

@@ -20,12 +20,9 @@ function SeriesList() {
   return (
     <>
       <div className="hero is-fullheight">
-        <div className="columns is-multiline m-4">
+        <div className="columns is-multiline m-3">
           {seriesList.map((series) => (
-            <div
-              key={series.id}
-              className="column is-justify-content-center is-one-third text-center "
-            >
+            <div key={series.id} className="column is-half ">
               <MovieCard {...series} handleDelete={handleDelete} />
             </div>
           ))}

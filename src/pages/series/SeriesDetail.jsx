@@ -37,7 +37,83 @@ function Series() {
 
   return (
     <>
-      <div className="hero is-fullheight is-full d-flex is-align-items-center is-justify-content-center  text-center mt-6">
+      <div className="hero is-fullheight ">
+        {auth.currentUser ? (
+          <div className="container is-half is-offset-one-quarter">
+            <div className="card text-center ">
+              <div className="card-image">
+                <figure className="image is-fullwidth is-4by3">
+                  <img
+                    style={{
+                      objectFit: "fill",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    src={serie?.photoUrl}
+                    alt="Placeholder image"
+                  />
+                </figure>
+              </div>
+
+              <div className="card-content">
+                <p className="title is-4 has-text-black ">{serie?.title}</p>
+                {serie?.createdBy && (
+                  <p className="subtitle is-6 mt-2">
+                    @{serie?.createdBy.replaceAll(" ", "").toLowerCase()}
+                  </p>
+                )}
+              </div>
+              <div className="content ">{serie?.topic}.</div>
+              <div className="content ">
+                <a>Çıkış Yılı: {serie?.year}</a>
+              </div>
+              <div className="content ">
+                <a>Oluşturulma Tarihi: {serie?.createdAt}</a>
+              </div>
+              {auth.currentUser.uid === serie?.userId && (
+                <footer className="card-footer">
+                  <button
+                    onClick={() => navigate(`/series/${seriesId}/edit`)}
+                    className="button is-link m-1 card-footer-item"
+                  >
+                    Düzenle
+                  </button>
+                  <button
+                    onClick={onClickDelete}
+                    className={`button is-danger m-1 card-footer-item ${
+                      deleting ? "is-loading" : " "
+                    }`}
+                  >
+                    Sil
+                  </button>
+                </footer>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="hero is-fullheight">
+            <div className="hero-body d-flex is-align-items-center is-justify-content-center text-center">
+              <div className="container  ">
+                <div className="row  ">
+                  <div className="col-md-12 text-center ">
+                    <h1 className="text-center"></h1>
+                    <h1>
+                      Giriş yapmadınız <br />
+                      <span className="text-primary ">Giriş yapmak için</span>
+                    </h1>
+                    <button className="btn btn-primary">
+                      <Link to="/login" className="text-white">
+                        Giriş Yap
+                      </Link>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* <div className="hero is-fullheight is-full d-flex is-align-items-center is-justify-content-center  text-center mt-6">
         <div className="columns  ">
           {auth.currentUser ? (
             <div className="column   ">
@@ -134,7 +210,7 @@ function Series() {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from "react";
-import { auth } from "../config/firebase";
+// import { useState } from "react";
+// import { auth } from "../config/firebase";
 import { Link, useNavigate } from "react-router-dom";
+import "./MovieCard.css";
 
 function MovieCard({
   userPhotoUrl,
@@ -17,68 +18,57 @@ function MovieCard({
   handleDelete,
   type,
 }) {
-  const [deleting, setDeleting] = useState(false);
+  // const [deleting, setDeleting] = useState(false);
+
+  const limitedTopic = topic.split(" ").slice(0, 10).join(" ");
+  const topicDisplay = topic.length > 50 ? `${limitedTopic}...` : topic;
 
   const navigate = useNavigate();
   return (
-    <div className="card " style={{ height: "99%" }}>
+    <div className="card">
       <div className="card-image">
         <figure className="image is-4by3">
           <img
+            className="img is-fullwidth "
             src={photoUrl}
             alt="Placeholder image"
             style={{
               borderRadius: "5px",
               objectFit: "contain",
             }}
+            onClick={() => {
+              navigate(`/${type}/${id}`);
+            }}
           />
         </figure>
       </div>
 
       <div className="card-content">
-        <div className="media">
-          <div className="media-right">
-            <figure className="image is-48x48 ">
-              <img
-                src={userPhotoUrl}
-                alt=""
-                className="is-rounded"
-                style={{
-                  width: "48px",
-                  height: "48px",
-                }}
-              />
-            </figure>
-          </div>
-          <div className="media-content d-flex is-align-items-center is-justify-content-center">
-            <div className="title is-4 has-text-black ">
-              <Link
-                style={{ textDecoration: "none" }}
-                className="has-text-link"
-                to={`/${type}/${id}`}
-              >
-                {title}
-              </Link>
-
-              <div className="card-content d-flex is-align-items-center is-justify-content-center">
-                <p className="subtitle is-6 ">
-                  @{createdBy.replaceAll(" ", "").toLowerCase()}
-                </p>
-              </div>
-            </div>
+        <div className="d-flex is-align-items-center is-justify-content-center">
+          <div className="title is-4 has-text-black ">
+            <Link
+              style={{
+                textDecoration: "none",
+                maxWidth: "90%",
+              }}
+              className="has-text-link"
+              to={`/${type}/${id}`}
+            >
+              {title}
+            </Link>
           </div>
         </div>
       </div>
 
-      <div
-        className="card-content d-flex is-align-items-center is-justify-content-center "
-        style={{ height: 200 }}
-      >
-        {topic}.
-        <br />
+      <div className="card-content">
+        <p className="subtitle is-6 ">
+          @{createdBy.replaceAll(" ", "").toLowerCase()}
+        </p>
       </div>
-      <div className="card-content d-flex is-align-items-center is-justify-content-center">
-        <a>#{title.replaceAll(" ", "").toLowerCase()}</a>
+
+      <div className="card-content ">
+        {topicDisplay}.
+        <br />
       </div>
 
       <div className="card-content  ">
@@ -86,28 +76,6 @@ function MovieCard({
         <br />
         <a>Oluşturulma Tarihi: {createdAt}</a>
       </div>
-
-      {auth.currentUser.uid === userId && (
-        <footer className="card-footer ">
-          <button
-            onClick={() => navigate(`/${type}/${id}/edit`)}
-            className="button is-link m-1 card-footer-item"
-          >
-            Düzenle
-          </button>
-
-          <button
-            onClick={() => {
-              handleDelete(id), setDeleting(true);
-            }}
-            className={`button is-danger m-1 card-footer-item ${
-              deleting ? "is-loading" : " "
-            }`}
-          >
-            Sil
-          </button>
-        </footer>
-      )}
     </div>
   );
 }
