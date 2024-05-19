@@ -8,6 +8,9 @@ import { useEffect, useState } from "react";
 function Menu() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1216);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+
 
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -48,17 +51,14 @@ function Menu() {
   }, [isMobile]);
 
   const handleSearch = async () => {
+    
     try {
-      const query = searchQuery; // Aramak istediğiniz kelime
-      const apiKey = ""; // API anahtarınız
-      const accessToken = "";
-
-      const url = `https://api.themoviedb.org/3/search/multi?query=${query}&api_key=7388ab269d1f10d165499e910add8e4c`;
-
+      const query = searchQuery; 
+      const url = `https://api.themoviedb.org/3/search/multi?query=${query}&api_key=${import.meta.env.VITE_TMDB_API_KEY}`;
       const response = await fetch(url, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
           "Content-Type": "application/json",
         },
       });
@@ -67,9 +67,11 @@ function Menu() {
         throw new Error("HTTP error, status = " + response.status);
       }
 
+
       const data = await response.json();
-      console.log("Search Results:", data);
+      console.log(data);
       // Burada API'den gelen verileri kullanabilirsiniz.
+      setSearchResults(data.results);
     } catch (error) {
       console.error("Error searching:", error);
     }
@@ -238,12 +240,17 @@ function Menu() {
                   <input
                     className="input "
                     type="text"
-                    placeholder="Find a post"
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Ara..."
+                    onChange={
+                      (e) => setSearchQuery(e.target.value)
+                    }
                   />
                 </p>
                 <p className="control">
-                  <button className="button " onClick={handleSearch}>
+                  <button className="button " onClick={
+                      handleSearch
+                    
+                  }>
                     Ara
                   </button>
                 </p>
