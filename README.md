@@ -4,7 +4,7 @@ Bu projede firebase kullanarak auth işlemi yapıldı.
 
 ## Kullanılan Teknolojiler
 
-**İstemci:** React, React Router Dom , Bootstrap , Firebase
+**İstemci:** React, React Router Dom , Bulma , Firebase
 
 **Sunucu:** Node, Firebase
 
@@ -12,14 +12,17 @@ Bu projede firebase kullanarak auth işlemi yapıldı.
 
 - Firebase auth
 - Firebase Hosting
-- Bootstrap
+- Firebase Storage
+- Bulma Css
 - React router dom
+- Tmdb
 
 ## Yol haritası
 
 - Ek tarayıcı desteği
 
 - Daha fazla entegrasyon ekleme
+
 
 ## Hosting
 
